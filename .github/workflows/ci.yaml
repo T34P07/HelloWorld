@@ -23,14 +23,14 @@ jobs:
         token: ${{ SECRETS.GITHUB_TOKEN }}
     
     - name: Lint
-      run:
+      run: |
         selene ./src
 
-style:
-  name: Styling
-  runs-on: ubuntu-latest
-  steps:
-  - uses: actions/checkout@v3
-    with:
-    token: ${{ SECRETS.GITHUB_TOKEN }}
-    args: --check .
+  style:
+    name: Styling
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ SECRETS.GITHUB_TOKEN }}
+        args: --check .
