@@ -1,7 +1,4 @@
-# Project place file
-/HelloWorld.rbxlx
-
-# Roblox Studio lock files
-/*.rbxlx.lock
-/*.rbxl.lock
-*.rbxl
+/node_modules
+/out
+/include
+*.tsbuildinfo
