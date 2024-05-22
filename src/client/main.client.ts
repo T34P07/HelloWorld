@@ -1,12 +1,16 @@
-import AnimationManager from "./AnimationManager";
-import CharacterManager from "./CharacterManager";
-import CameraManager from "./CameraManager";
+import AnimationService from "./AnimationService";
+import CharacterService from "./CharacterService";
+import CameraService from "./CameraService";
 
 print("Pre starting modules!");
 
-CharacterManager.PreStart();
-CharacterManager.Start();
-AnimationManager.Start();
-CameraManager.Start();
+CharacterService.PreStart();
+
+print("Start CharacterService", CharacterService);
+CharacterService.Start();
+print("Start AnimationService", AnimationService);
+AnimationService.Start();
+print("Start CameraService", CameraService);
+CameraService.Start();
 
 print("Modules started!");

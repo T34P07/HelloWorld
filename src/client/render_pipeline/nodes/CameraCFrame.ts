@@ -1,6 +1,5 @@
 import { Node } from "../Node";
-import CharacterManager from "client/CharacterManager";
-import CameraManager from "client/CameraManager";
+import CharacterService from "client/CharacterService";
 
 const UserInputService = game.GetService("UserInputService");
 const UserGameSettings = UserSettings().GetService("UserGameSettings");
@@ -22,15 +21,15 @@ export class CameraCFrame extends Node {
 		);
 	}
 
-	Update(dt: number, currentCFrame: CFrame): CFrame {
-		if (!CharacterManager.hrp || !CharacterManager.head || !CharacterManager.hum) return currentCFrame;
+	Update(dt: number, currentCFrame: CFrame, mode: number): CFrame {
+		if (!CharacterService.hrp || !CharacterService.head || !CharacterService.hum) return currentCFrame;
 
-		const hrpCF = CharacterManager.hrp.CFrame as CFrame;
+		const hrpCF = CharacterService.hrp.CFrame as CFrame;
 		let output = currentCFrame;
 
-		if (CameraManager.mode === 1) {
+		if (mode === 1) {
 			let raw = new CFrame(currentCFrame.Position);
-			let offset = this.lastOffset.Lerp(CharacterManager.hum.CameraOffset, dt * 10);
+			let offset = this.lastOffset.Lerp(CharacterService.hum.CameraOffset, dt * 10);
 			this.lastOffset = offset;
 
 			offset = hrpCF.RightVector.mul(offset.X).add(
