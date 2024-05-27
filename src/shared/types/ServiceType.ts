@@ -69,7 +69,9 @@ export type CharacterServiceType = {
 	noCharParams: RaycastParams;
 	animationTracks: Record<string, AnimationTrack>;
 	rootPart: Part | undefined;
+	renderPipeline: RenderPipeline;
 	OnCharacterAdded: (Character: Model) => void;
 	PreStart: () => void;
 	Start: () => void;
+	Update: (dt: number) => void;
 };

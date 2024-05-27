@@ -5,7 +5,7 @@ export interface PreUpdate {
 }
 
 export interface Update {
-	Update(dt: number, currentCFrame: CFrame, ...args: unknown[]): CFrame;
+	Update<T>(dt: number, currentCFrame: T, ...args: unknown[]): T;
 }
 
 export interface Start {
@@ -36,14 +36,14 @@ export class RenderPipeline implements PreUpdate, Update, Start, PostUpdate {
 		});
 	}
 
-	Update(dt: number, currentCFrame: CFrame, ...args: unknown[]): CFrame {
-		let finalCFrame: CFrame = currentCFrame;
+	Update<T>(dt: number, input: T, ...args: unknown[]): T {
+		let output: T = input;
 
 		this.nodes.forEach((node: Node) => {
-			finalCFrame = node.Update(dt, finalCFrame, ...args);
+			output = node.Update(dt, output, ...args);
 		});
 
-		return finalCFrame;
+		return output;
 	}
 
 	PostUpdate(dt: number, ...args: unknown[]): void {

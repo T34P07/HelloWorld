@@ -4,9 +4,12 @@ const Players = game.GetService("Players");
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 const UserInputService = game.GetService("UserInputService");
 
-import { CharacterServiceType } from "./types/ServiceType";
+import { CharacterServiceType } from "../shared/types/ServiceType";
 import AnimationService from "./AnimationService";
 import Prefabs from "./services/Prefabs";
+import { CharacterRotation } from "./render_pipeline/nodes/CharacterRotation";
+import { RenderPipeline } from "./render_pipeline/RenderPipeline";
+import { CharacterNodeInputType } from "shared/types/NodeTypes";
 
 const localPlayer = Players.LocalPlayer;
 
@@ -35,6 +38,7 @@ const CharacterService: CharacterServiceType = {
 	noCharParams: new RaycastParams(),
 	animationTracks: {},
 	rootPart: undefined,
+	renderPipeline: new RenderPipeline([CharacterRotation]),
 	OnCharacterAdded: (Character): void => {
 		CharacterService.char = Character;
 		CharacterService.hrp = CharacterService.char.WaitForChild("HumanoidRootPart") as Part;
@@ -64,7 +68,6 @@ const CharacterService: CharacterServiceType = {
 			CharacterService.animationTracks[animation.Name] = CharacterService.animator.LoadAnimation(animation);
 		});
 
-		print("SET FIGURE!");
 		AnimationService.SetFigure(CharacterService.char);
 		AnimationService.LoadAnimations(Prefabs.Animations.Movement.Base);
 	},
@@ -84,6 +87,22 @@ const CharacterService: CharacterServiceType = {
 		localPlayer.CharacterAdded.Connect(CharacterService.OnCharacterAdded);
 
 		if (localPlayer.Character) CharacterService.OnCharacterAdded(localPlayer.Character);
+
+		RunService.BindToRenderStep("CharacterUpdate", Enum.RenderPriority.Character.Value, CharacterService.Update);
+	},
+	Update: (dt) => {
+		if (!CharacterService.hrp) return;
+
+		const characterNodeInput: CharacterNodeInputType = {
+			hrp: { instance: CharacterService.hrp, cf: CharacterService.hrp.CFrame },
+		};
+
+		CharacterService.renderPipeline.PreUpdate(dt, characterNodeInput);
+
+		const output = CharacterService.renderPipeline.Update(dt, characterNodeInput);
+		CharacterService.hrp.CFrame = output.hrp.cf;
+
+		CharacterService.renderPipeline.PostUpdate(dt, characterNodeInput);
 	},
 };
 

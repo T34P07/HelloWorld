@@ -1,9 +1,8 @@
 const Workspace = game.GetService("Workspace");
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 const RunService = game.GetService("RunService");
-const Prefabs = ReplicatedStorage.WaitForChild("Prefabs");
 
-import { AnimationServiceType } from "./types/ServiceType";
+import { AnimationServiceType } from "../shared/types/ServiceType";
 import RunConfig from "./config/RunConfig";
 
 const AnimationService: AnimationServiceType = {

@@ -1,7 +1,7 @@
 import CharacterService from "./CharacterService";
 import { RenderPipeline } from "./render_pipeline/RenderPipeline";
 import { CameraCFrame } from "./render_pipeline/nodes/CameraCFrame";
-import { CameraServiceType } from "./types/ServiceType";
+import { CameraServiceType } from "../shared/types/ServiceType";
 
 const Workspace = game.GetService("Workspace");
 const RunService = game.GetService("RunService");
@@ -36,7 +36,6 @@ const CameraService: CameraServiceType = {
 		CameraService.renderPipeline.PostUpdate(dt, CameraService.mode);
 	},
 	Start: () => {
-		print("Start camera service");
 		RunService.BindToRenderStep("CameraUpdate", Enum.RenderPriority.Camera.Value, CameraService.Update);
 	},
 };

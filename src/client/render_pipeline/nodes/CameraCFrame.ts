@@ -21,14 +21,14 @@ export class CameraCFrame extends Node {
 		);
 	}
 
-	Update(dt: number, currentCFrame: CFrame, mode: number): CFrame {
-		if (!CharacterService.hrp || !CharacterService.head || !CharacterService.hum) return currentCFrame;
+	Update<T>(dt: number, input: T, mode: number): T {
+		if (!CharacterService.hrp || !CharacterService.head || !CharacterService.hum) return input;
 
 		const hrpCF = CharacterService.hrp.CFrame as CFrame;
-		let output = currentCFrame;
+		let output = input as CFrame;
 
 		if (mode === 1) {
-			let raw = new CFrame(currentCFrame.Position);
+			let raw = new CFrame(output.Position);
 			let offset = this.lastOffset.Lerp(CharacterService.hum.CameraOffset, dt * 10);
 			this.lastOffset = offset;
 
@@ -37,12 +37,12 @@ export class CameraCFrame extends Node {
 			);
 
 			const [hrpY, hrpX, hrpZ] = hrpCF.ToOrientation();
-			raw = currentCFrame.add(offset).mul(CFrame.Angles(-hrpY, -hrpX, -hrpZ));
+			raw = output.add(offset).mul(CFrame.Angles(-hrpY, -hrpX, -hrpZ));
 
 			const rot = CFrame.Angles(0, this.rot.X, 0).mul(CFrame.Angles(this.rot.Y, 0, 0));
 			output = raw.mul(rot);
 		}
 
-		return output;
+		return output as T;
 	}
 }
