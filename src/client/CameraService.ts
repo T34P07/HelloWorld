@@ -11,7 +11,7 @@ const Players = game.GetService("Players");
 const localPlayer = Players.LocalPlayer;
 
 const CameraService: CameraServiceType = {
-	mode: 1,
+	mode: 2,
 	submode: 1,
 	offset: Vector3.zero,
 	modifiers: {
@@ -28,12 +28,12 @@ const CameraService: CameraServiceType = {
 		const headCF = CharacterService.head.CFrame;
 		const hrpCF = CharacterService.hrp.CFrame;
 
-		CameraService.renderPipeline.PreUpdate(dt, CameraService.mode);
+		CameraService.renderPipeline.PreUpdate(dt, CameraService.mode, CameraService.submode);
 
-		const output = CameraService.renderPipeline.Update(dt, headCF, CameraService.mode);
+		const output = CameraService.renderPipeline.Update(dt, headCF, CameraService.mode, CameraService.submode);
 		CameraService.camera!.CFrame = output;
 
-		CameraService.renderPipeline.PostUpdate(dt, CameraService.mode);
+		CameraService.renderPipeline.PostUpdate(dt, CameraService.mode, CameraService.submode);
 	},
 	Start: () => {
 		RunService.BindToRenderStep("CameraUpdate", Enum.RenderPriority.Camera.Value, CameraService.Update);

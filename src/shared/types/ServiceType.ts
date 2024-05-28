@@ -1,5 +1,13 @@
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
 
+export type ClientEngineType = {
+	Modules: {};
+	StartModules: () => void;
+	PreStartModules: () => void;
+	LoadGame: () => void;
+	PreStart: () => void;
+};
+
 export type AnimationServiceType = {
 	figure: Model | undefined;
 	humanoid: Humanoid | undefined;

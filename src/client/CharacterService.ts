@@ -39,7 +39,7 @@ const CharacterService: CharacterServiceType = {
 	animationTracks: {},
 	rootPart: undefined,
 	renderPipeline: new RenderPipeline([CharacterRotation]),
-	OnCharacterAdded: (Character): void => {
+	OnCharacterAdded: (Character) => {
 		CharacterService.char = Character;
 		CharacterService.hrp = CharacterService.char.WaitForChild("HumanoidRootPart") as Part;
 		CharacterService.hum = CharacterService.char.WaitForChild("Humanoid") as Humanoid;
