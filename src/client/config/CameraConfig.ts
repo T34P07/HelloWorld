@@ -9,7 +9,7 @@ const CameraConfig: CameraConfigType = {
 
 		{
 			Offset: new Vector3(2, 1, 4),
-			Responsiveness: 20,
+			Responsiveness: -1,
 		},
 
 		{
@@ -18,6 +18,7 @@ const CameraConfig: CameraConfigType = {
 		},
 	],
 	FOV: 120,
+	Clamp: math.rad(80),
 };
 
 export default CameraConfig;

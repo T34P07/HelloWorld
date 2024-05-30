@@ -43,9 +43,6 @@ export type AnimationServiceType = {
 };
 
 export type CameraServiceType = {
-	mode: number;
-	submode: number;
-	offset: Vector3;
 	modifiers: {
 		principalAxes: {};
 	};
@@ -60,7 +57,7 @@ export type CharacterActionType = string | undefined;
 export type CharacterServiceType = {
 	action: CharacterActionType;
 	autoRotate: boolean;
-	visibleBodyParts: string[];
+	viewmodelParts: string[];
 	cooldowns: [];
 	char: Model | undefined;
 	hrp: Part | undefined;
@@ -80,6 +77,7 @@ export type CharacterServiceType = {
 	rootPart: Part | undefined;
 	renderPipeline: RenderPipeline;
 	OnCharacterAdded: (Character: Model) => void;
+	OnViewmodelUpdate: (dt: number) => void;
 	PreStart: () => void;
 	Start: () => void;
 	Update: (dt: number) => void;

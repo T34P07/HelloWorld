@@ -14,9 +14,6 @@ const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
 
 const CameraService: CameraServiceType = {
-	mode: 2,
-	submode: 1,
-	offset: Vector3.zero,
 	modifiers: {
 		principalAxes: {},
 	},
@@ -31,27 +28,31 @@ const CameraService: CameraServiceType = {
 		const headCF = CharacterService.head.CFrame;
 		const hrpCF = CharacterService.hrp.CFrame;
 
-		CameraService.renderPipeline.PreUpdate(dt, CameraService.mode, CameraService.submode);
+		CameraService.renderPipeline.PreUpdate(dt);
 
-		const output = CameraService.renderPipeline.Update(dt, headCF, CameraService.mode, CameraService.submode);
+		const output = CameraService.renderPipeline.Update(dt, headCF);
 		CameraService.camera!.CFrame = output;
 
-		CameraService.renderPipeline.PostUpdate(dt, CameraService.mode, CameraService.submode);
+		CameraService.renderPipeline.PostUpdate(dt);
 	},
 	Start: () => {
 		RunService.BindToRenderStep("CameraUpdate", Enum.RenderPriority.Camera.Value, CameraService.Update);
 		camera!.FieldOfView = CameraConfig.FOV;
+		camera!.SetAttribute("Mode", 0);
+		camera!.SetAttribute("SubMode", 0);
 
 		InputService.BindAction("CameraModeCycle", (actionName, userInputState, inputObject) => {
 			if (userInputState !== Enum.UserInputState.Begin) return;
 
-			CameraService.mode = CameraService.mode < CameraConfig.Modes.length ? CameraService.mode + 1 : 1;
+			const mode = camera!.GetAttribute("Mode") as number;
+			camera!.SetAttribute("Mode", mode < CameraConfig.Modes.size() - 1 ? mode + 1 : 0);
 		});
 
 		InputService.BindAction("CameraSubModeCycle", (actionName, userInputState, inputObject) => {
 			if (userInputState !== Enum.UserInputState.Begin) return;
 
-			CameraService.submode = 3 - CameraService.submode;
+			const submode = camera!.GetAttribute("SubMode") as number;
+			camera!.SetAttribute("SubMode", submode < 1 ? submode + 1 : 0);
 		});
 	},
 };

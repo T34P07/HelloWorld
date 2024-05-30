@@ -8,20 +8,20 @@ import { CharacterServiceType } from "../shared/types/ServiceType";
 import AnimationService from "./AnimationService";
 import Prefabs from "./services/Prefabs";
 import { CharacterRotation } from "./render_pipeline/nodes/CharacterRotation";
+import { CharacterTilt } from "./render_pipeline/nodes/CharacterTilt";
 import { RenderPipeline } from "./render_pipeline/RenderPipeline";
 import { CharacterNodeInputType } from "shared/types/NodeTypes";
+import { deepCopy } from "@rbxts/deepcopy";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
-
-const vectorXZ = new Vector3(1, 0, 1);
 
 export type action = string | undefined;
 
 const CharacterService: CharacterServiceType = {
 	action: undefined,
 	autoRotate: true,
-	visibleBodyParts: ["Left Arm", "Right Arm", "Left Leg", "Right Leg", "Torso"],
+	viewmodelParts: ["Left Arm", "Right Arm", "Left Leg", "Right Leg", "Torso"],
 	cooldowns: [],
 	char: undefined,
 	hrp: undefined,
@@ -39,7 +39,7 @@ const CharacterService: CharacterServiceType = {
 	noCharParams: new RaycastParams(),
 	animationTracks: {},
 	rootPart: undefined,
-	renderPipeline: new RenderPipeline([CharacterRotation]),
+	renderPipeline: new RenderPipeline([CharacterRotation, CharacterTilt]),
 	OnCharacterAdded: (Character) => {
 		camera!.CameraType = Enum.CameraType.Scriptable;
 		CharacterService.char = Character;
@@ -52,6 +52,10 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.leftLeg = CharacterService.char.WaitForChild("Left Leg") as Part;
 		CharacterService.rightLeg = CharacterService.char.WaitForChild("Right Leg") as Part;
 		CharacterService.animator = CharacterService.hum.WaitForChild("Animator") as Animator;
+
+		CharacterService.hum.CameraOffset = new Vector3(0, 0, 1);
+		CharacterService.hum.WalkSpeed = 30;
+		CharacterService.hum.AutoRotate = false;
 
 		const rootJoint = CharacterService.hrp.WaitForChild("RootJoint") as Motor6D;
 		const neck = CharacterService.torso.WaitForChild("Neck") as Motor6D;
@@ -73,6 +77,18 @@ const CharacterService: CharacterServiceType = {
 		AnimationService.SetFigure(CharacterService.char);
 		AnimationService.LoadAnimations(Prefabs.Animations.Movement.Base);
 	},
+	OnViewmodelUpdate: () => {
+		if (!CharacterService.char) return;
+
+		const mode = camera!.GetAttribute("Mode");
+
+		CharacterService.char.GetDescendants().forEach((child) => {
+			if (child.IsA("BasePart") || child.IsA("Decal")) {
+				child.LocalTransparencyModifier =
+					mode !== 0 ? 0 : CharacterService.viewmodelParts.find((part) => part === child.Name) ? 0 : 1;
+			}
+		});
+	},
 	PreStart: () => {
 		CharacterService.rootPart = new Instance("Part");
 		CharacterService.rootPart.Anchored = true;
@@ -91,18 +107,22 @@ const CharacterService: CharacterServiceType = {
 		if (localPlayer.Character) CharacterService.OnCharacterAdded(localPlayer.Character);
 
 		RunService.BindToRenderStep("CharacterUpdate", Enum.RenderPriority.Character.Value, CharacterService.Update);
+		RunService.PreRender.Connect(CharacterService.OnViewmodelUpdate);
 	},
 	Update: (dt) => {
-		if (!CharacterService.hrp) return;
+		if (!CharacterService.hrp || !CharacterService.rootJoint) return;
 
 		const characterNodeInput: CharacterNodeInputType = {
 			hrp: { instance: CharacterService.hrp, cf: CharacterService.hrp.CFrame },
+			rootJoint: deepCopy(CharacterService.rootJoint),
 		};
 
 		CharacterService.renderPipeline.PreUpdate(dt, characterNodeInput);
 
 		const output = CharacterService.renderPipeline.Update(dt, characterNodeInput);
 		CharacterService.hrp.CFrame = output.hrp.cf;
+		CharacterService.rootJoint.instance.C0 = output.rootJoint.c0;
+		CharacterService.rootJoint.instance.C1 = output.rootJoint.c1;
 
 		CharacterService.renderPipeline.PostUpdate(dt, characterNodeInput);
 	},
