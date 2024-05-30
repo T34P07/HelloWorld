@@ -4,7 +4,12 @@ type CameraMode = {
 };
 
 export type CameraConfigType = {
-	Modes: {
-		[key: number]: CameraMode;
-	};
+	Modes: [CameraMode, CameraMode, CameraMode];
+	FOV: number;
+};
+
+export type InputCode = Enum.KeyCode | Enum.UserInputType;
+
+export type InputConfigType = {
+	[name: string]: InputCode;
 };

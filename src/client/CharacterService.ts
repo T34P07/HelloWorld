@@ -12,6 +12,7 @@ import { RenderPipeline } from "./render_pipeline/RenderPipeline";
 import { CharacterNodeInputType } from "shared/types/NodeTypes";
 
 const localPlayer = Players.LocalPlayer;
+const camera = Workspace.CurrentCamera;
 
 const vectorXZ = new Vector3(1, 0, 1);
 
@@ -40,6 +41,7 @@ const CharacterService: CharacterServiceType = {
 	rootPart: undefined,
 	renderPipeline: new RenderPipeline([CharacterRotation]),
 	OnCharacterAdded: (Character) => {
+		camera!.CameraType = Enum.CameraType.Scriptable;
 		CharacterService.char = Character;
 		CharacterService.hrp = CharacterService.char.WaitForChild("HumanoidRootPart") as Part;
 		CharacterService.hum = CharacterService.char.WaitForChild("Humanoid") as Humanoid;

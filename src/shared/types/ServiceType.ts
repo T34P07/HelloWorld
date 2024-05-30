@@ -1,4 +1,5 @@
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
+import { InputCode } from "./ConfigTypes";
 
 export type ClientEngineType = {
 	Modules: {};
@@ -54,10 +55,10 @@ export type CameraServiceType = {
 	Start: () => void;
 };
 
-export type actionType = string | undefined;
+export type CharacterActionType = string | undefined;
 
 export type CharacterServiceType = {
-	action: actionType;
+	action: CharacterActionType;
 	autoRotate: boolean;
 	visibleBodyParts: string[];
 	cooldowns: [];
@@ -82,4 +83,14 @@ export type CharacterServiceType = {
 	PreStart: () => void;
 	Start: () => void;
 	Update: (dt: number) => void;
+};
+
+export type InputActionCallback = (name: string, userInputState: Enum.UserInputState, inputObject: InputObject) => void;
+
+export type InputServiceType = {
+	Actions: Record<string, InputActionCallback>;
+	BindAction: (name: string, callback: InputActionCallback) => void;
+	OnInputBegan: (inputObject: InputObject, gameProcessedEvent: boolean) => void;
+	OnInputEnded: (inputObject: InputObject, gameProcessedEvent: boolean) => void;
+	Start: () => void;
 };
