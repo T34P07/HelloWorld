@@ -54,11 +54,16 @@ export class CameraCFrame extends Node {
 			output = raw.mul(rot);
 		} else {
 			let raw = new CFrame(hrpCF.Position);
-			const offsetXY = hrpCF.RightVector.mul(modeConfig.Offset.X)
-				.mul(submode === 0 ? 1 : -1)
-				.add(hrpCF.UpVector.mul(modeConfig.Offset.Y));
 
-			raw = raw.add(offsetXY);
+			const offset = this.lastOffset.Lerp(
+				hrpCF.RightVector.mul(modeConfig.Offset.X)
+					.mul(submode === 0 ? 1 : -1)
+					.add(hrpCF.UpVector.mul(modeConfig.Offset.Y)),
+				dt * 10,
+			);
+			this.lastOffset = offset;
+
+			raw = raw.add(offset);
 
 			const t = modeConfig.Responsiveness > 0 ? modeConfig.Responsiveness * dt : 1;
 			const rot = CFrame.Angles(0, this.rot.X, 0).mul(CFrame.Angles(this.rot.Y, 0, 0));
