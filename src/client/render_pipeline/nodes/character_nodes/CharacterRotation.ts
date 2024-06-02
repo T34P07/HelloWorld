@@ -1,4 +1,4 @@
-import { Node } from "../Node";
+import { Node } from "../../Node";
 import { CharacterNodeInputType } from "shared/types/NodeTypes";
 
 const Workspace = game.GetService("Workspace");

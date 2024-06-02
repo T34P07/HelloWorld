@@ -1,5 +1,5 @@
 import { CharacterNodeInputType } from "shared/types/NodeTypes";
-import { Node } from "../Node";
+import { Node } from "client/render_pipeline/Node";
 import CharacterTiltConfig from "client/config/CharacterTiltConfig";
 
 const vectorXZ = new Vector3(1, 0, 1);

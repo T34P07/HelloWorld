@@ -1,14 +1,13 @@
 import CharacterService from "./CharacterService";
-import { RenderPipeline } from "./render_pipeline/RenderPipeline";
-import { CameraCFrame } from "./render_pipeline/nodes/CameraCFrame";
-import { CameraServiceType } from "../shared/types/ServiceType";
-import CameraConfig from "./config/CameraConfig";
-import InputService from "./InputService";
+import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
+import { CameraCFrame } from "client/render_pipeline/nodes/camera_nodes/CameraCFrame";
+import { CameraSway } from "client/render_pipeline/nodes/camera_nodes/CameraSway";
+import { CameraServiceType } from "shared/types/ServiceType";
+import CameraConfig from "client/config/CameraConfig";
+import InputService from "client/InputService";
+import { CameraNodeInputType } from "shared/types/NodeTypes";
 
-const Workspace = game.GetService("Workspace");
-const RunService = game.GetService("RunService");
-const UserInputService = game.GetService("UserInputService");
-const Players = game.GetService("Players");
+import { Workspace, RunService, UserInputService, Players } from "@rbxts/services";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -17,7 +16,7 @@ const CameraService: CameraServiceType = {
 	modifiers: {
 		principalAxes: {},
 	},
-	renderPipeline: new RenderPipeline([CameraCFrame]),
+	renderPipeline: new RenderPipeline([CameraCFrame, CameraSway]),
 	camera: Workspace.CurrentCamera,
 	Update: (dt) => {
 		if (!CameraService.camera || !CharacterService.head || !CharacterService.hrp) return;
@@ -30,8 +29,12 @@ const CameraService: CameraServiceType = {
 
 		CameraService.renderPipeline.PreUpdate(dt);
 
-		const output = CameraService.renderPipeline.Update(dt, headCF);
-		CameraService.camera!.CFrame = output;
+		const input: CameraNodeInputType = {
+			camera: { instance: CameraService.camera, cf: headCF },
+		};
+
+		const output = CameraService.renderPipeline.Update(dt, input);
+		CameraService.camera!.CFrame = output.camera.cf;
 
 		CameraService.renderPipeline.PostUpdate(dt);
 	},

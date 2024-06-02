@@ -1,9 +1,7 @@
-const Workspace = game.GetService("Workspace");
-const ReplicatedStorage = game.GetService("ReplicatedStorage");
-const RunService = game.GetService("RunService");
+import { AnimationServiceType } from "shared/types/ServiceType";
+import { RunService } from "@rbxts/services";
 
-import { AnimationServiceType } from "../shared/types/ServiceType";
-import RunConfig from "./config/RunConfig";
+import RunConfig from "client/config/RunConfig";
 
 const AnimationService: AnimationServiceType = {
 	animationTracks: {},
