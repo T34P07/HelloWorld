@@ -1,6 +1,8 @@
 type CameraMode = {
 	Offset: Vector3;
 	Responsiveness: number;
+	OffsetResponsiveness: number;
+	Submodes: [];
 };
 
 export type CameraConfigType = {
