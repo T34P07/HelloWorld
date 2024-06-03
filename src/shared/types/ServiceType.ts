@@ -1,5 +1,4 @@
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
-import { InputCode } from "./ConfigTypes";
 
 export type ClientEngineType = {
 	Modules: {};
@@ -90,5 +89,6 @@ export type InputServiceType = {
 	BindAction: (name: string, callback: InputActionCallback) => void;
 	OnInputBegan: (inputObject: InputObject, gameProcessedEvent: boolean) => void;
 	OnInputEnded: (inputObject: InputObject, gameProcessedEvent: boolean) => void;
+	IsInputActive: (name: string) => boolean;
 	Start: () => void;
 };

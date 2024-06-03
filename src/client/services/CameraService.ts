@@ -49,13 +49,17 @@ const CameraService: CameraServiceType = {
 
 			const mode = camera!.GetAttribute("Mode") as number;
 			camera!.SetAttribute("Mode", mode < CameraConfig.Modes.size() - 1 ? mode + 1 : 0);
+			camera!.SetAttribute("SubMode", 0);
 		});
 
 		InputService.BindAction("CameraSubModeCycle", (actionName, userInputState, inputObject) => {
 			if (userInputState !== Enum.UserInputState.Begin) return;
 
+			const mode = camera!.GetAttribute("Mode") as number;
+			const cameraModeConfig = CameraConfig.Modes[mode];
+
 			const submode = camera!.GetAttribute("SubMode") as number;
-			camera!.SetAttribute("SubMode", submode < 1 ? submode + 1 : 0);
+			camera!.SetAttribute("SubMode", submode < cameraModeConfig.SubModes.size() - 1 ? submode + 1 : 0);
 		});
 	},
 };

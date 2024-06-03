@@ -1,12 +1,15 @@
-type CameraMode = {
+type CameraSubMode = {
 	Offset: Vector3;
+};
+
+type CameraMode = {
 	Responsiveness: number;
 	OffsetResponsiveness: number;
-	Submodes: [];
+	SubModes: CameraSubMode[];
 };
 
 export type CameraConfigType = {
-	Modes: [CameraMode, CameraMode, CameraMode];
+	Modes: CameraMode[];
 	FOV: number;
 	Clamp: number;
 };

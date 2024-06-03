@@ -22,7 +22,7 @@ export class CameraCFrame extends Node {
 			math.clamp(this.rot.Y - mouseDelta.Y * mouseSensitivity * 0.025, -CameraConfig.Clamp, CameraConfig.Clamp),
 		);
 
-		camera!.SetAttribute("OrbialAxis", this.rot);
+		camera!.SetAttribute("OrbitalAxis", this.rot);
 	}
 
 	Update<T>(dt: number, input: T): T {
@@ -34,6 +34,7 @@ export class CameraCFrame extends Node {
 		const output = input as CameraNodeInputType;
 
 		const modeConfig = CameraConfig.Modes[mode];
+		const subModeConfig = modeConfig.SubModes[submode];
 
 		if (mode === 0) {
 			let raw = new CFrame(output.camera.cf.Position);
@@ -53,7 +54,7 @@ export class CameraCFrame extends Node {
 			let raw = new CFrame(hrpCF.Position);
 
 			const offset = this.lastOffset.Lerp(
-				new Vector3(modeConfig.Offset.X * submode === 0 ? 1 : -1, modeConfig.Offset.Y, 0),
+				new Vector3(subModeConfig.Offset.X, subModeConfig.Offset.Y, 0),
 				10 * dt,
 			);
 			this.lastOffset = offset;
@@ -66,7 +67,7 @@ export class CameraCFrame extends Node {
 			const rot = CFrame.Angles(0, this.rot.X, 0).mul(CFrame.Angles(this.rot.Y, 0, 0));
 
 			output.camera.cf = this.lastOutput.Lerp(
-				raw.mul(rot).mul(new CFrame(Vector3.zAxis.mul(modeConfig.Offset.Z))),
+				raw.mul(rot).mul(new CFrame(Vector3.zAxis.mul(-subModeConfig.Offset.Z))),
 				t,
 			);
 

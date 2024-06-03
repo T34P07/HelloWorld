@@ -5,7 +5,7 @@ const UserInputService = game.GetService("UserInputService");
 
 const InputService: InputServiceType = {
 	Actions: {},
-	BindAction: (name: string, callback: InputActionCallback) => {
+	BindAction: (name, callback) => {
 		InputService.Actions[name] = callback;
 	},
 	OnInputBegan: (inputObject, gameProcessedEvent) => {
@@ -31,6 +31,15 @@ const InputService: InputServiceType = {
 				callback(tostring(actionName), Enum.UserInputState.End, inputObject);
 			}
 		}
+	},
+	IsInputActive: (name) => {
+		const input = InputConfig[name];
+
+		//	if (name === "MoveForward" || name === "MoveBackward" || name === "MoveRight" || name === "MoveLeft") {
+		//		return UserInputService.IsKeyDown(input);
+		//	}
+
+		return false;
 	},
 	Start: () => {
 		UserInputService.InputBegan.Connect(InputService.OnInputBegan);
