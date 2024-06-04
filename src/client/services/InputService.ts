@@ -1,5 +1,5 @@
 import { InputActionCallback, InputServiceType } from "shared/types/ServiceType";
-import InputConfig from "./config/InputConfig";
+import InputConfig from "../config/InputConfig";
 
 const UserInputService = game.GetService("UserInputService");
 
@@ -35,9 +35,8 @@ const InputService: InputServiceType = {
 	IsInputActive: (name) => {
 		const input = InputConfig[name];
 
-		//	if (name === "MoveForward" || name === "MoveBackward" || name === "MoveRight" || name === "MoveLeft") {
-		//		return UserInputService.IsKeyDown(input);
-		//	}
+		if (input.IsA("UserInputType")) return UserInputService.IsMouseButtonPressed(input);
+		if (input.IsA("KeyCode")) return UserInputService.IsKeyDown(input);
 
 		return false;
 	},

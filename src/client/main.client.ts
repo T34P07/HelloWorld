@@ -1,5 +1,5 @@
 import CharacterService from "./services/CharacterService";
-import InputService from "./InputService";
+import InputService from "./services/InputService";
 import AnimationService from "./services/AnimationService";
 import CameraService from "./services/CameraService";
 import ControlService from "./services/ControlService";

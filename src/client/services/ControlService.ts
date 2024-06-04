@@ -1,5 +1,5 @@
-import { RunService, UserInputService } from "@rbxts/services";
-import InputService from "client/InputService";
+import { RunService } from "@rbxts/services";
+import InputService from "client/services/InputService";
 import CharacterService from "./CharacterService";
 
 let lastGrounded = 0;
@@ -13,8 +13,8 @@ const ControlService = {
 		const isGrounded = CharacterService.hum.FloorMaterial !== Enum.Material.Air;
 
 		const moveDirection = new Vector2(
-			(UserInputService.IsKeyDown(Enum.KeyCode.W) ? 1 : 0) - (UserInputService.IsKeyDown(Enum.KeyCode.S) ? 1 : 0),
-			(UserInputService.IsKeyDown(Enum.KeyCode.D) ? 1 : 0) - (UserInputService.IsKeyDown(Enum.KeyCode.A) ? 1 : 0),
+			(InputService.IsInputActive("MoveForward") ? 1 : 0) - (InputService.IsInputActive("MoveBackward") ? 1 : 0),
+			(InputService.IsInputActive("MoveRight") ? 1 : 0) - (InputService.IsInputActive("MoveLeft") ? 1 : 0),
 		);
 
 		let worldMoveDirection = hrpCF.RightVector.mul(moveDirection.Y).add(hrpCF.LookVector.mul(moveDirection.X));
@@ -31,7 +31,7 @@ const ControlService = {
 		CharacterService.hum.Move(ControlService.worldMoveDirection.Lerp(worldMoveDirection, 10 * dt));
 		ControlService.worldMoveDirection = worldMoveDirection;
 
-		if (isGrounded && UserInputService.IsKeyDown(Enum.KeyCode.Space)) {
+		if (isGrounded && InputService.IsInputActive("Jump")) {
 			CharacterService.hum.Jump = true;
 		}
 	},
