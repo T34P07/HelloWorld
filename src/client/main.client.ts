@@ -10,3 +10,9 @@ CharacterService.Start();
 AnimationService.Start();
 CameraService.Start();
 ControlService.Start();
+
+import { Melee } from "shared/classes/Melee";
+
+const tool = new Instance("Tool");
+const katana = new Melee(tool, 20);
+katana.attack();
