@@ -3,18 +3,138 @@
 registry = "test"
 
 [[package]]
+name = "brittonfischer/camerashaker"
+version = "0.1.0"
+dependencies = []
+
+[[package]]
+name = "brittonfischer/profileservice"
+version = "2.1.5"
+dependencies = []
+
+[[package]]
 name = "evaera/promise"
 version = "4.0.0"
 dependencies = []
 
 [[package]]
-name = "howmanysmall/janitor"
-version = "1.16.0"
+name = "ffrostflame/bridgenet2"
+version = "1.0.0"
+dependencies = [["RemotePacketSizeCounter", "pysephwasntavailable/remotepacketsizecounter@2.4.1"], ["TableKit", "ffrostflame/tablekit@0.2.4"], ["wallyInstanceManager", "ffrostflame/wally-instance-manager@0.1.0"]]
+
+[[package]]
+name = "ffrostflame/tablekit"
+version = "0.2.4"
+dependencies = []
+
+[[package]]
+name = "ffrostflame/wally-instance-manager"
+version = "0.1.0"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/boolean"
+version = "1.2.6"
+dependencies = [["number", "jsdotlua/number@1.2.6"]]
+
+[[package]]
+name = "jsdotlua/collections"
+version = "1.2.6"
+dependencies = [["es7-types", "jsdotlua/es7-types@1.2.6"], ["instance-of", "jsdotlua/instance-of@1.2.6"]]
+
+[[package]]
+name = "jsdotlua/console"
+version = "1.2.6"
+dependencies = [["collections", "jsdotlua/collections@1.2.6"]]
+
+[[package]]
+name = "jsdotlua/es7-types"
+version = "1.2.6"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/instance-of"
+version = "1.2.6"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/luau-polyfill"
+version = "1.2.6"
+dependencies = [["boolean", "jsdotlua/boolean@1.2.6"], ["collections", "jsdotlua/collections@1.2.6"], ["console", "jsdotlua/console@1.2.6"], ["es7-types", "jsdotlua/es7-types@1.2.6"], ["instance-of", "jsdotlua/instance-of@1.2.6"], ["math", "jsdotlua/math@1.2.6"], ["number", "jsdotlua/number@1.2.6"], ["string", "jsdotlua/string@1.2.6"], ["symbol-luau", "jsdotlua/symbol-luau@1.0.1"], ["timers", "jsdotlua/timers@1.2.6"]]
+
+[[package]]
+name = "jsdotlua/math"
+version = "1.2.6"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/number"
+version = "1.2.6"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/promise"
+version = "3.5.2"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/react"
+version = "17.1.0"
+dependencies = [["luau-polyfill", "jsdotlua/luau-polyfill@1.2.6"], ["shared", "jsdotlua/shared@17.1.0"]]
+
+[[package]]
+name = "jsdotlua/react-reconciler"
+version = "17.1.0"
+dependencies = [["luau-polyfill", "jsdotlua/luau-polyfill@1.2.6"], ["promise", "jsdotlua/promise@3.5.2"], ["react", "jsdotlua/react@17.1.0"], ["scheduler", "jsdotlua/scheduler@17.1.0"], ["shared", "jsdotlua/shared@17.1.0"]]
+
+[[package]]
+name = "jsdotlua/react-roblox"
+version = "17.1.0"
+dependencies = [["luau-polyfill", "jsdotlua/luau-polyfill@1.2.6"], ["react", "jsdotlua/react@17.1.0"], ["react-reconciler", "jsdotlua/react-reconciler@17.1.0"], ["scheduler", "jsdotlua/scheduler@17.1.0"], ["shared", "jsdotlua/shared@17.1.0"]]
+
+[[package]]
+name = "jsdotlua/scheduler"
+version = "17.1.0"
+dependencies = [["luau-polyfill", "jsdotlua/luau-polyfill@1.2.6"], ["shared", "jsdotlua/shared@17.1.0"]]
+
+[[package]]
+name = "jsdotlua/shared"
+version = "17.1.0"
+dependencies = [["luau-polyfill", "jsdotlua/luau-polyfill@1.2.6"]]
+
+[[package]]
+name = "jsdotlua/string"
+version = "1.2.6"
+dependencies = [["es7-types", "jsdotlua/es7-types@1.2.6"], ["number", "jsdotlua/number@1.2.6"]]
+
+[[package]]
+name = "jsdotlua/symbol-luau"
+version = "1.0.1"
+dependencies = []
+
+[[package]]
+name = "jsdotlua/timers"
+version = "1.2.6"
+dependencies = [["collections", "jsdotlua/collections@1.2.6"]]
+
+[[package]]
+name = "littensy/reflex"
+version = "4.3.1"
 dependencies = [["Promise", "evaera/promise@4.0.0"]]
 
 [[package]]
-name = "roblox/roact"
-version = "1.4.4"
+name = "lukadev-0/typed-promise"
+version = "4.0.2"
+dependencies = [["Promise", "evaera/promise@4.0.0"]]
+
+[[package]]
+name = "nightcycle/maid"
+version = "1.1.4"
+dependencies = []
+
+[[package]]
+name = "pysephwasntavailable/remotepacketsizecounter"
+version = "2.4.1"
 dependencies = []
 
 [[package]]
@@ -23,6 +143,11 @@ version = "2.0.1"
 dependencies = []
 
 [[package]]
+name = "solarhorizon/fastcast"
+version = "13.2.1"
+dependencies = []
+
+[[package]]
 name = "ygsuf/helloworld-3"
 version = "0.1.0"
-dependencies = [["janitor", "howmanysmall/janitor@1.16.0"], ["roact", "roblox/roact@1.4.4"], ["signal", "sleitnick/signal@2.0.1"]]
+dependencies = [["Bridgenet2", "ffrostflame/bridgenet2@1.0.0"], ["CameraShaker", "brittonfischer/camerashaker@0.1.0"], ["Fastcast", "solarhorizon/fastcast@13.2.1"], ["Maid", "nightcycle/maid@1.1.4"], ["ProfileService", "brittonfischer/profileservice@2.1.5"], ["Promise", "lukadev-0/typed-promise@4.0.2"], ["React", "jsdotlua/react@17.1.0"], ["ReactRoblox", "jsdotlua/react-roblox@17.1.0"], ["Reflex", "littensy/reflex@4.3.1"], ["Signal", "sleitnick/signal@2.0.1"]]

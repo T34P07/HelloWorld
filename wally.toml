@@ -5,6 +5,15 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
 [dependencies]
-signal = "sleitnick/signal@2.0.1"
-roact = "roblox/roact@1.4.4"
-janitor = "howmanysmall/janitor@1.16.0"
+Maid = "nightcycle/maid@1.1.4"
+Bridgenet2 = "ffrostflame/bridgenet2@1.0.0"
+Promise = "lukadev-0/typed-promise@4.0.2"
+ProfileService = "brittonfischer/profileservice@2.1.5"
+Reflex = "littensy/reflex@4.3.1"
+Signal = "sleitnick/signal@2.0.1"
+CameraShaker = "brittonfischer/camerashaker@0.1.0"
+Fastcast = "solarhorizon/fastcast@13.2.1"
+
+# React
+React = "jsdotlua/react@17.1.0"
+ReactRoblox = "jsdotlua/react-roblox@17.1.0"

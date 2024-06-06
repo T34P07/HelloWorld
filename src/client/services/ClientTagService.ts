@@ -9,8 +9,9 @@ type ClientTagServiceType = {
 };
 
 const ClientTagService: ClientTagServiceType = {
+	//	TagMaids: {},
 	OnInstanceAdded: (tag, instance) => {},
-	OnInstanceRemoved: () => {},
+	OnInstanceRemoved: (tag, instance) => {},
 	OnTagAdded: (tag) => {
 		CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
 			ClientTagService.OnInstanceRemoved(tag, instance);
