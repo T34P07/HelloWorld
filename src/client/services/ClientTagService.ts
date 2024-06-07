@@ -1,4 +1,5 @@
-import { CollectionService } from "@rbxts/services";
+import { Janitor } from "@rbxts/janitor";
+import { CollectionService, ReplicatedStorage } from "@rbxts/services";
 
 type ClientTagServiceType = {
 	OnInstanceAdded: (tag: string, instance: Instance) => void;
@@ -10,16 +11,24 @@ type ClientTagServiceType = {
 
 const ClientTagService: ClientTagServiceType = {
 	//	TagMaids: {},
-	OnInstanceAdded: (tag, instance) => {},
+	OnInstanceAdded: (tag, instance) => {
+		
+	},
 	OnInstanceRemoved: (tag, instance) => {},
 	OnTagAdded: (tag) => {
-		CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
-			ClientTagService.OnInstanceRemoved(tag, instance);
-		});
+		const janitor = new Janitor();
 
-		CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
-			ClientTagService.OnInstanceAdded(tag, instance);
-		});
+		janitor.Add(
+			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
+				ClientTagService.OnInstanceRemoved(tag, instance);
+			}),
+		);
+
+		janitor.Add(
+			CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
+				ClientTagService.OnInstanceAdded(tag, instance);
+			}),
+		);
 	},
 	OnTagRemoved: (tag) => {},
 	Start: () => {
