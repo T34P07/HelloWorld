@@ -6,7 +6,7 @@ const UserInputService = game.GetService("UserInputService");
 
 import { CharacterServiceType } from "../types/ServiceType";
 import AnimationService from "./AnimationService";
-import Prefabs from "./Prefabs";
+import Prefabs from "../../shared/libraries/Prefabs";
 import { CharacterRotation } from "../render_pipeline/nodes/character_nodes/CharacterRotation";
 import { CharacterTilt } from "client/render_pipeline/nodes/character_nodes/CharacterTilt";
 import { RenderPipeline } from "../render_pipeline/RenderPipeline";
