@@ -8,7 +8,7 @@ import {
 } from "server/types/service_typse/TagServiceTypes";
 import { Tag } from "server/classes/tags/Tag";
 
-const ServerTagService: TagServiceType = {
+const TagService: TagServiceType = {
 	TagHandlers: {},
 	GetTagClass: (tag) => {
 		const className = tag + "Tag";
@@ -29,7 +29,7 @@ const ServerTagService: TagServiceType = {
 		let tagInstance = tagHandler.instances.get(instance);
 		if (tagInstance) return;
 
-		const TagClass = ServerTagService.GetTagClass(tag);
+		const TagClass = TagService.GetTagClass(tag);
 		if (!TagClass) return;
 
 		tagInstance = new TagClass(instance);
@@ -43,7 +43,7 @@ const ServerTagService: TagServiceType = {
 		tagHandler.instances.set(instance, undefined);
 	},
 	OnTagAdded: (tag) => {
-		if (ServerTagService.TagHandlers[tag]) return;
+		if (TagService.TagHandlers[tag]) return;
 
 		const janitor = new Janitor();
 		const tagHandler = {
@@ -51,40 +51,40 @@ const ServerTagService: TagServiceType = {
 			instances: new Map<Instance, Tag | undefined>(),
 		};
 
-		ServerTagService.TagHandlers[tag] = tagHandler;
+		TagService.TagHandlers[tag] = tagHandler;
 
 		janitor.Add(
 			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
-				ServerTagService.OnInstanceRemoved(tag, instance, tagHandler);
+				TagService.OnInstanceRemoved(tag, instance, tagHandler);
 			}),
 		);
 
 		janitor.Add(
 			CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
-				ServerTagService.OnInstanceAdded(tag, instance, tagHandler);
+				TagService.OnInstanceAdded(tag, instance, tagHandler);
 			}),
 		);
 
 		CollectionService.GetTagged(tag).forEach((instance) => {
-			ServerTagService.OnInstanceAdded(tag, instance, tagHandler);
+			TagService.OnInstanceAdded(tag, instance, tagHandler);
 		});
 	},
 	OnTagRemoved: (tag: string) => {
-		const tagHandler = ServerTagService.TagHandlers[tag];
+		const tagHandler = TagService.TagHandlers[tag];
 		if (!tagHandler) return;
 
 		tagHandler.janitor.Destroy();
-		ServerTagService.TagHandlers[tag] = undefined;
+		TagService.TagHandlers[tag] = undefined;
 	},
 	Start: () => {
 		print("Starttt");
-		CollectionService.TagRemoved.Connect(ServerTagService.OnTagRemoved);
-		CollectionService.TagAdded.Connect(ServerTagService.OnTagAdded);
+		CollectionService.TagRemoved.Connect(TagService.OnTagRemoved);
+		CollectionService.TagAdded.Connect(TagService.OnTagAdded);
 
 		CollectionService.GetAllTags().forEach((tag: string) => {
-			ServerTagService.OnTagAdded(tag);
+			TagService.OnTagAdded(tag);
 		});
 	},
 };
 
-export default ServerTagService;
+export default TagService;
