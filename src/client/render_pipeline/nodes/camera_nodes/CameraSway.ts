@@ -1,6 +1,6 @@
 import { Node } from "client/render_pipeline/Node";
 import CharacterService from "client/services/CharacterService";
-import { CameraNodeInputType } from "shared/types/NodeTypes";
+import { CameraNodeInputType } from "client/types/NodeTypes";
 import { lerp } from "shared/utilities/MathUtilities";
 
 const Workspace = game.GetService("Workspace");

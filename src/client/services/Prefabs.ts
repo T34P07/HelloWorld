@@ -7,6 +7,7 @@ interface Prefabs extends Folder {
 			Base: Folder;
 		};
 	};
+	Tools: Folder;
 }
 
 const Prefabs = ReplicatedStorage.WaitForChild(`Prefabs`) as Prefabs;

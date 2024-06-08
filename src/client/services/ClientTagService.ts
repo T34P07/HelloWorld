@@ -1,67 +1,71 @@
 import { Janitor } from "@rbxts/janitor";
-import { CollectionService, ReplicatedStorage, StarterPlayer } from "@rbxts/services";
-import { Tag } from "client/tags/Tag";
-
-type ClientTagServiceType = {
-	TagHandlers: {
-		[tag: string]:
-			| {
-					janitor: Janitor;
-					instances: {};
-			  }
-			| undefined;
-	};
-	GetTagClass: (tag: string) => Tag | void;
-	OnInstanceAdded: (tag: string, instance: Instance) => void;
-	OnInstanceRemoved: (tag: string, instance: Instance) => void;
-	OnTagAdded: (tag: string) => void;
-	OnTagRemoved: (tag: string) => void;
-	Start: () => void;
-};
+import { CollectionService, StarterPlayer } from "@rbxts/services";
+import { Tag } from "client/classes/tags/Tag";
+import { ClientTagServiceType, TagClassModuleExportsType, TagConstructorType } from "client/types/ServiceType";
+import Prefabs from "./Prefabs";
 
 const ClientTagService: ClientTagServiceType = {
 	TagHandlers: {},
 	GetTagClass: (tag) => {
+		const className = tag + "Tag";
 		const classModule = StarterPlayer.WaitForChild("StarterPlayerScripts")
 			.WaitForChild("TS")
+			.WaitForChild("classes")
 			.WaitForChild("tags")
-			.FindFirstChild(tag + "Tag") as ModuleScript | undefined;
+			.FindFirstChild(className) as ModuleScript | undefined;
 		if (!classModule) return;
 
-		const tagClass = require(classModule) as Tag;
+		const moduleExports = require(classModule) as TagClassModuleExportsType;
+		const tagClass = moduleExports[className] as TagConstructorType;
 		return tagClass;
 	},
-	OnInstanceAdded: (tag, instance) => {
-		let tagClass = ClientTagService.GetTagClass(tag) as Tag;
-		if (!tagClass) return;
+	OnInstanceAdded: (tag, instance, tagHandler) => {
+		if (instance.IsDescendantOf(Prefabs)) return;
 
-		tagClass = new tagClass();
+		let tagInstance = tagHandler.instances.get(instance);
+		if (tagInstance) return;
+
+		const TagClass = ClientTagService.GetTagClass(tag);
+		if (!TagClass) return;
+
+		tagInstance = new TagClass(instance);
+		tagHandler.instances.set(instance, tagInstance);
 	},
-	OnInstanceRemoved: (tag, instance) => {},
+	OnInstanceRemoved: (tag, instance, tagHandler) => {
+		const tagInstance = tagHandler.instances.get(instance);
+		if (!tagInstance) return;
+
+		tagInstance.Destroy();
+		tagHandler.instances.set(instance, undefined);
+	},
 	OnTagAdded: (tag) => {
+		if (ClientTagService.TagHandlers[tag]) return;
+
 		const janitor = new Janitor();
-		ClientTagService.TagHandlers[tag] = {
+		const tagHandler = {
 			janitor: janitor,
-			instances: {},
+			instances: new Map<Instance, Tag | undefined>(),
 		};
+
+		ClientTagService.TagHandlers[tag] = tagHandler;
 
 		janitor.Add(
 			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
-				ClientTagService.OnInstanceRemoved(tag, instance);
+				ClientTagService.OnInstanceRemoved(tag, instance, tagHandler);
 			}),
 		);
 
 		janitor.Add(
 			CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
-				ClientTagService.OnInstanceAdded(tag, instance);
+				ClientTagService.OnInstanceAdded(tag, instance, tagHandler);
 			}),
 		);
 
 		CollectionService.GetTagged(tag).forEach((instance) => {
-			ClientTagService.OnInstanceAdded(tag, instance);
+			ClientTagService.OnInstanceAdded(tag, instance, tagHandler);
 		});
 	},
-	OnTagRemoved: (tag) => {
+	OnTagRemoved: (tag: string) => {
 		const tagHandler = ClientTagService.TagHandlers[tag];
 		if (!tagHandler) return;
 
@@ -69,6 +73,7 @@ const ClientTagService: ClientTagServiceType = {
 		ClientTagService.TagHandlers[tag] = undefined;
 	},
 	Start: () => {
+		print("Starttt");
 		CollectionService.TagRemoved.Connect(ClientTagService.OnTagRemoved);
 		CollectionService.TagAdded.Connect(ClientTagService.OnTagAdded);
 

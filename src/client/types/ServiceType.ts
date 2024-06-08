@@ -1,4 +1,6 @@
+import { Janitor } from "@rbxts/janitor";
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
+import { Tag } from "client/classes/tags/Tag";
 
 export type ClientEngineType = {
 	Modules: {};
@@ -90,5 +92,25 @@ export type InputServiceType = {
 	OnInputBegan: (inputObject: InputObject, gameProcessedEvent: boolean) => void;
 	OnInputEnded: (inputObject: InputObject, gameProcessedEvent: boolean) => void;
 	IsInputActive: (name: string) => boolean;
+	Start: () => void;
+};
+
+export type TagConstructorType = new (instance: Instance) => Tag;
+
+export type TagClassModuleExportsType = { [key: string]: unknown };
+
+export type TagHandlerType = {
+	janitor: Janitor;
+	instances: Map<Instance, Tag | undefined>;
+};
+export type ClientTagServiceType = {
+	TagHandlers: {
+		[tag: string]: TagHandlerType | undefined;
+	};
+	GetTagClass: (tag: string) => TagConstructorType | void;
+	OnInstanceAdded: (tag: string, instance: Instance, tagHandler: TagHandlerType) => void;
+	OnInstanceRemoved: (tag: string, instance: Instance, tagHandler: TagHandlerType) => void;
+	OnTagAdded: (tag: string) => void;
+	OnTagRemoved: (tag: string) => void;
 	Start: () => void;
 };

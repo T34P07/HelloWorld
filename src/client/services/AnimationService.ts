@@ -1,4 +1,4 @@
-import { AnimationServiceType } from "shared/types/ServiceType";
+import { AnimationServiceType } from "client/types/ServiceType";
 import { RunService } from "@rbxts/services";
 
 import RunConfig from "client/config/RunConfig";

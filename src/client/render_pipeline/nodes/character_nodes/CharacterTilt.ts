@@ -1,4 +1,4 @@
-import { CharacterNodeInputType } from "shared/types/NodeTypes";
+import { CharacterNodeInputType } from "client/types/NodeTypes";
 import { Node } from "client/render_pipeline/Node";
 import CharacterTiltConfig from "client/config/CharacterTiltConfig";
 

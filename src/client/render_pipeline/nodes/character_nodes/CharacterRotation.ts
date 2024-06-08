@@ -1,5 +1,5 @@
 import { Node } from "../../Node";
-import { CharacterNodeInputType } from "shared/types/NodeTypes";
+import { CharacterNodeInputType } from "client/types/NodeTypes";
 
 const Workspace = game.GetService("Workspace");
 const camera = Workspace.CurrentCamera;

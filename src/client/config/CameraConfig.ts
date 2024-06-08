@@ -1,4 +1,4 @@
-import { CameraConfigType } from "shared/types/ConfigTypes";
+import { CameraConfigType } from "client/types/ConfigTypes";
 
 const CameraConfig: CameraConfigType = {
 	Modes: [

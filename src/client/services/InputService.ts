@@ -1,4 +1,4 @@
-import { InputActionCallback, InputServiceType } from "shared/types/ServiceType";
+import { InputActionCallback, InputServiceType } from "client/types/ServiceType";
 import InputConfig from "../config/InputConfig";
 
 const UserInputService = game.GetService("UserInputService");

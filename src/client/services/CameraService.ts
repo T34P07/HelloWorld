@@ -2,10 +2,10 @@ import CharacterService from "./CharacterService";
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
 import { CameraCFrame } from "client/render_pipeline/nodes/camera_nodes/CameraCFrame";
 import { CameraSway } from "client/render_pipeline/nodes/camera_nodes/CameraSway";
-import { CameraServiceType } from "shared/types/ServiceType";
+import { CameraServiceType } from "client/types/ServiceType";
 import CameraConfig from "client/config/CameraConfig";
 import InputService from "client/services/InputService";
-import { CameraNodeInputType } from "shared/types/NodeTypes";
+import { CameraNodeInputType } from "client/types/NodeTypes";
 
 import { Workspace, RunService, UserInputService, Players } from "@rbxts/services";
 
