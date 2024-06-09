@@ -1,17 +1,12 @@
-const Workspace = game.GetService("Workspace");
-const RunService = game.GetService("RunService");
-const Players = game.GetService("Players");
-const ReplicatedStorage = game.GetService("ReplicatedStorage");
-const UserInputService = game.GetService("UserInputService");
-
 import { CharacterServiceType } from "client/types/service_types/CharacterServiceType";
-import AnimationService from "./AnimationService";
 import Prefabs from "../../shared/libraries/Prefabs";
 import { CharacterRotation } from "../render_pipeline/nodes/character_nodes/CharacterRotation";
 import { CharacterTilt } from "client/render_pipeline/nodes/character_nodes/CharacterTilt";
 import { RenderPipeline } from "../render_pipeline/RenderPipeline";
 import { CharacterNodeInputType } from "client/types/node_types/CharacterNodeInputType";
 import { deepCopy } from "@rbxts/deepcopy";
+import { CharacterAnimator } from "./CharacterAnimator";
+import { Players, RunService, Workspace } from "@rbxts/services";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -19,6 +14,7 @@ const camera = Workspace.CurrentCamera;
 export type action = string | undefined;
 
 const CharacterService: CharacterServiceType = {
+	characterAnimator: undefined,
 	action: undefined,
 	autoRotate: true,
 	viewmodelParts: ["Left Arm", "Right Arm", "Left Leg", "Right Leg", "Torso"],
@@ -40,9 +36,14 @@ const CharacterService: CharacterServiceType = {
 	animationTracks: {},
 	rootPart: undefined,
 	renderPipeline: new RenderPipeline([CharacterRotation, CharacterTilt]),
-	OnCharacterAdded: (Character) => {
+	OnCharacterRemoving: (character) => {
+		if (CharacterService.characterAnimator) {
+			CharacterService.characterAnimator.Destroy();
+		}
+	},
+	OnCharacterAdded: (character) => {
 		camera!.CameraType = Enum.CameraType.Scriptable;
-		CharacterService.char = Character;
+		CharacterService.char = character;
 		CharacterService.hrp = CharacterService.char.WaitForChild("HumanoidRootPart") as Part;
 		CharacterService.hum = CharacterService.char.WaitForChild("Humanoid") as Humanoid;
 		CharacterService.torso = CharacterService.char.WaitForChild("Torso") as Part;
@@ -74,8 +75,8 @@ const CharacterService: CharacterServiceType = {
 			CharacterService.animationTracks[animation.Name] = CharacterService.animator.LoadAnimation(animation);
 		});
 
-		AnimationService.SetFigure(CharacterService.char);
-		AnimationService.LoadAnimations(Prefabs.Animations.Movement.Base);
+		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char);
+		CharacterService.characterAnimator.LoadAnimations(Prefabs.Animations.Movement.Base);
 	},
 	OnViewmodelUpdate: () => {
 		if (!CharacterService.char) return;
@@ -121,6 +122,10 @@ const CharacterService: CharacterServiceType = {
 			hrp: { instance: CharacterService.hrp, cf: CharacterService.hrp.CFrame },
 			rootJoint: deepCopy(CharacterService.rootJoint),
 		};
+
+		if (CharacterService.characterAnimator) {
+			CharacterService.characterAnimator.Update();
+		}
 
 		CharacterService.renderPipeline.PreUpdate(dt, characterNodeInput);
 

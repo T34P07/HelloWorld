@@ -1,6 +1,6 @@
 import Prefabs from "shared/libraries/Prefabs";
 import { Tag } from "./Tag";
-import AnimationService from "client/services/AnimationService";
+import CharacterService from "client/services/CharacterService";
 
 export class ToolTag extends Tag {
 	protected tool: Tool;
@@ -8,6 +8,7 @@ export class ToolTag extends Tag {
 	protected animationTracks = new Map<string, AnimationTrack>();
 
 	private LoadAnimations() {
+		if (!CharacterService.characterAnimator) return;
 		const animations = Prefabs.Animations.Tools.FindFirstChild(this.tool.Name, true);
 		if (!animations) return;
 
@@ -15,7 +16,7 @@ export class ToolTag extends Tag {
 		const actionAnimations = animations.FindFirstChild("Action") as Folder | undefined;
 
 		if (baseAnimations) {
-			AnimationService.LoadAnimations(baseAnimations);
+			CharacterService.characterAnimator.LoadAnimations(baseAnimations);
 		}
 	}
 

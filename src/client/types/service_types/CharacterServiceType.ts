@@ -1,8 +1,10 @@
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
+import { CharacterAnimator } from "client/services/CharacterAnimator";
 
 export type CharacterActionType = string | undefined;
 
 export type CharacterServiceType = {
+	characterAnimator: CharacterAnimator | undefined;
 	action: CharacterActionType;
 	autoRotate: boolean;
 	viewmodelParts: string[];
@@ -24,7 +26,8 @@ export type CharacterServiceType = {
 	animationTracks: Record<string, AnimationTrack>;
 	rootPart: Part | undefined;
 	renderPipeline: RenderPipeline;
-	OnCharacterAdded: (Character: Model) => void;
+	OnCharacterAdded: (character: Model) => void;
+	OnCharacterRemoving: (character: Model) => void;
 	OnViewmodelUpdate: (dt: number) => void;
 	PreStart: () => void;
 	Start: () => void;
