@@ -1,7 +1,7 @@
 import { Janitor } from "@rbxts/janitor";
 import { Tag } from "client/classes/tags/Tag";
 
-export type TagConstructorType = new (instance: Instance) => Tag;
+export type TagConstructorType = new (instance: Instance, tag: string) => Tag;
 
 export type TagClassModuleExportsType = { [key: string]: unknown };
 

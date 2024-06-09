@@ -9,15 +9,16 @@ import {
 	TagConstructorType,
 } from "client/types/service_types/TagServiceType";
 
+const tagClassModulesFolder = StarterPlayer.WaitForChild("StarterPlayerScripts")
+	.WaitForChild("TS")
+	.WaitForChild("classes")
+	.WaitForChild("tags");
+
 const TagService: TagServiceType = {
 	TagHandlers: {},
 	GetTagClass: (tag) => {
 		const className = tag + "Tag";
-		const classModule = StarterPlayer.WaitForChild("StarterPlayerScripts")
-			.WaitForChild("TS")
-			.WaitForChild("classes")
-			.WaitForChild("tags")
-			.FindFirstChild(className) as ModuleScript | undefined;
+		const classModule = tagClassModulesFolder.FindFirstChild(className) as ModuleScript | undefined;
 		if (!classModule) return;
 
 		const moduleExports = require(classModule) as TagClassModuleExportsType;
@@ -33,7 +34,7 @@ const TagService: TagServiceType = {
 		const TagClass = TagService.GetTagClass(tag);
 		if (!TagClass) return;
 
-		tagInstance = new TagClass(instance);
+		tagInstance = new TagClass(instance, tag);
 		tagHandler.instances.set(instance, tagInstance);
 	},
 	OnInstanceRemoved: (tag, instance, tagHandler) => {
@@ -78,7 +79,6 @@ const TagService: TagServiceType = {
 		TagService.TagHandlers[tag] = undefined;
 	},
 	Start: () => {
-		print("Starttt");
 		CollectionService.TagRemoved.Connect(TagService.OnTagRemoved);
 		CollectionService.TagAdded.Connect(TagService.OnTagAdded);
 

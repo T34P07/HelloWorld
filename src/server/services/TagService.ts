@@ -1,22 +1,20 @@
 import { Janitor } from "@rbxts/janitor";
-import { CollectionService, StarterPlayer } from "@rbxts/services";
+import { CollectionService, ServerScriptService } from "@rbxts/services";
 import Prefabs from "shared/libraries/Prefabs";
 import {
 	TagServiceType,
 	TagClassModuleExportsType,
 	TagConstructorType,
-} from "server/types/service_typse/TagServiceTypes";
+} from "server/types/service_types/TagServiceTypes";
 import { Tag } from "server/classes/tags/Tag";
+
+const tagClassModulesFolder = ServerScriptService.WaitForChild("TS").WaitForChild("classes").WaitForChild("tags");
 
 const TagService: TagServiceType = {
 	TagHandlers: {},
 	GetTagClass: (tag) => {
 		const className = tag + "Tag";
-		const classModule = StarterPlayer.WaitForChild("StarterPlayerScripts")
-			.WaitForChild("TS")
-			.WaitForChild("classes")
-			.WaitForChild("tags")
-			.FindFirstChild(className) as ModuleScript | undefined;
+		const classModule = tagClassModulesFolder.FindFirstChild(className) as ModuleScript | undefined;
 		if (!classModule) return;
 
 		const moduleExports = require(classModule) as TagClassModuleExportsType;
@@ -32,7 +30,7 @@ const TagService: TagServiceType = {
 		const TagClass = TagService.GetTagClass(tag);
 		if (!TagClass) return;
 
-		tagInstance = new TagClass(instance);
+		tagInstance = new TagClass(instance, tag);
 		tagHandler.instances.set(instance, tagInstance);
 	},
 	OnInstanceRemoved: (tag, instance, tagHandler) => {

@@ -6,6 +6,14 @@ interface Prefabs extends Folder {
 			Abilities: Folder;
 			Base: Folder;
 		};
+		Tools: Folder & {
+			Weapons: Folder & {
+				[name: string]: Folder & {
+					Action: Folder;
+					Base: Folder;
+				};
+			};
+		};
 	};
 	Tools: Folder;
 }
