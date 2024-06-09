@@ -23,6 +23,7 @@ const TagService: TagServiceType = {
 
 		const moduleExports = require(classModule) as TagClassModuleExportsType;
 		const tagClass = moduleExports[className] as TagConstructorType;
+
 		return tagClass;
 	},
 	OnInstanceAdded: (tag, instance, tagHandler) => {

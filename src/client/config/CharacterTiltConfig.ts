@@ -1,4 +1,4 @@
-import { CharacterTiltConfigType } from "client/types/ConfigTypes";
+import { CharacterTiltConfigType } from "client/types/config_types/CharacterTiltConfigType";
 
 const CharacterTiltConfig: CharacterTiltConfigType = {
 	Factor: new Vector2(0.1, 0.1),

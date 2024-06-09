@@ -4,13 +4,13 @@ const Players = game.GetService("Players");
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 const UserInputService = game.GetService("UserInputService");
 
-import { CharacterServiceType } from "../types/ServiceType";
+import { CharacterServiceType } from "client/types/service_types/CharacterServiceType";
 import AnimationService from "./AnimationService";
 import Prefabs from "../../shared/libraries/Prefabs";
 import { CharacterRotation } from "../render_pipeline/nodes/character_nodes/CharacterRotation";
 import { CharacterTilt } from "client/render_pipeline/nodes/character_nodes/CharacterTilt";
 import { RenderPipeline } from "../render_pipeline/RenderPipeline";
-import { CharacterNodeInputType } from "client/types/NodeTypes";
+import { CharacterNodeInputType } from "client/types/node_types/CharacterNodeInputType";
 import { deepCopy } from "@rbxts/deepcopy";
 
 const localPlayer = Players.LocalPlayer;

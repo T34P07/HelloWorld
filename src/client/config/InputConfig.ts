@@ -1,4 +1,4 @@
-import { InputConfigType } from "client/types/ConfigTypes";
+import { InputConfigType } from "client/types/config_types/InputConfigType";
 
 const InputConfig: InputConfigType = {
 	CameraModeCycle: Enum.KeyCode.C,

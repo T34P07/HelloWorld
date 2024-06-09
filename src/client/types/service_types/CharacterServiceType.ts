@@ -1,0 +1,32 @@
+import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
+
+export type CharacterActionType = string | undefined;
+
+export type CharacterServiceType = {
+	action: CharacterActionType;
+	autoRotate: boolean;
+	viewmodelParts: string[];
+	cooldowns: [];
+	char: Model | undefined;
+	hrp: Part | undefined;
+	hum: Humanoid | undefined;
+	torso: Part | undefined;
+	head: Part | undefined;
+	leftArm: Part | undefined;
+	rightArm: Part | undefined;
+	leftLeg: Part | undefined;
+	rightLeg: Part | undefined;
+	animator: Animator | undefined;
+	rootJoint: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
+	neck: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
+	rootAttach: Attachment | undefined;
+	noCharParams: RaycastParams;
+	animationTracks: Record<string, AnimationTrack>;
+	rootPart: Part | undefined;
+	renderPipeline: RenderPipeline;
+	OnCharacterAdded: (Character: Model) => void;
+	OnViewmodelUpdate: (dt: number) => void;
+	PreStart: () => void;
+	Start: () => void;
+	Update: (dt: number) => void;
+};

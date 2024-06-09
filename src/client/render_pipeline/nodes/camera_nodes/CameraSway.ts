@@ -1,12 +1,7 @@
+import { UserInputService } from "@rbxts/services";
 import { Node } from "client/render_pipeline/Node";
 import CharacterService from "client/services/CharacterService";
-import { CameraNodeInputType } from "client/types/NodeTypes";
-import { lerp } from "shared/utilities/MathUtilities";
-
-const Workspace = game.GetService("Workspace");
-
-const UserInputService = game.GetService("UserInputService");
-const UserGameSettings = UserSettings().GetService("UserGameSettings");
+import { CameraNodeInputType } from "client/types/node_types/CameraNodeInputType";
 
 export class CameraSway extends Node {
 	private rot = Vector2.zero;

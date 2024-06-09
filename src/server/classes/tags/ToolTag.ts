@@ -1,7 +1,8 @@
 import { Tag } from "./Tag";
 
 export class ToolTag extends Tag {
-	private tool;
+	protected tool: Tool;
+	protected class: string;
 	private rig;
 
 	AttachToRig() {
@@ -19,11 +20,13 @@ export class ToolTag extends Tag {
 		});
 	}
 
-	constructor(tool: Tool) {
+	constructor(tool: Tool, toolclass: string) {
 		super();
 		this.tool = tool;
+		this.class = toolclass;
 		this.rig = this.tool.Parent;
 		this.AttachToRig();
+		print("attach to rig", tool);
 	}
 
 	Destroy() {

@@ -1,6 +1,6 @@
-import { MeleeTag } from "./MeleeTag";
+import { WeaponTag } from "./WeaponTag";
 
-export class KatanaTag extends MeleeTag {
+export class MeleeTag extends WeaponTag {
 	constructor(tool: Tool, toolclass: string) {
 		super(tool, toolclass);
 	}

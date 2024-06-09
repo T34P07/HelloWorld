@@ -1,7 +1,7 @@
 import CameraConfig from "client/config/CameraConfig";
 import { Node } from "../../Node";
 import CharacterService from "client/services/CharacterService";
-import { CameraNodeInputType } from "client/types/NodeTypes";
+import { CameraNodeInputType } from "client/types/node_types/CameraNodeInputType";
 import { Workspace, UserInputService } from "@rbxts/services";
 
 const UserGameSettings = UserSettings().GetService("UserGameSettings");
