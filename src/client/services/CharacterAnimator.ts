@@ -27,6 +27,7 @@ export class CharacterAnimator {
 			if (weight) animationTrack.AdjustWeight(weight);
 
 			animationTracks.push(animationTrack);
+			print(animationTracks);
 		});
 
 		if (this.pose === "Standing") this.PlayAnimation("Idle");
@@ -51,19 +52,24 @@ export class CharacterAnimator {
 
 	private GetAnimationTrack(animationTracks: AnimationTrack[]) {
 		let lastWeight = 0;
-		let lastAnimationTrack: AnimationTrack | undefined;
+
+		let randomAnimationTracks: AnimationTrack[] = [];
 
 		animationTracks.forEach((animationTrack) => {
 			let weight = animationTrack.Animation!.GetAttribute("Weight") as number;
 			weight = weight ?? 0;
 
-			if (!lastAnimationTrack || weight > lastWeight) {
+			if (randomAnimationTracks.size() < 1 || weight > lastWeight) {
 				lastWeight = weight;
-				lastAnimationTrack = animationTrack;
+				randomAnimationTracks = [animationTrack];
+			} else if (weight === lastWeight) {
+				randomAnimationTracks.push(animationTrack);
 			}
 		});
 
-		return lastAnimationTrack;
+		if (randomAnimationTracks.size() > 0) {
+			return randomAnimationTracks[math.random(randomAnimationTracks.size()) - 1];
+		}
 	}
 
 	private PlayAnimation(name: string, transitionTime?: number) {
@@ -204,16 +210,16 @@ export class CharacterAnimator {
 		this.humanoid = this.character.WaitForChild("Humanoid") as Humanoid;
 		this.animator = this.humanoid.WaitForChild("Animator") as Animator;
 
-		this.humanoid.Died.Connect(this.OnDied);
-		this.humanoid.Running.Connect(this.OnRunning);
-		this.humanoid.Jumping.Connect(this.OnJumping);
-		this.humanoid.Climbing.Connect(this.OnClimbing);
-		this.humanoid.GettingUp.Connect(this.OnGettingUp);
-		this.humanoid.FreeFalling.Connect(this.OnFreeFall);
-		this.humanoid.FallingDown.Connect(this.OnFallingDown);
-		this.humanoid.Seated.Connect(this.OnSeated);
-		this.humanoid.PlatformStanding.Connect(this.OnPlatformStanding);
-		this.humanoid.Swimming.Connect(this.OnSwimming);
+		this.humanoid.Died.Connect(() => this.OnDied());
+		this.humanoid.Running.Connect((speed: number) => this.OnRunning(speed));
+		this.humanoid.Jumping.Connect(() => this.OnJumping());
+		this.humanoid.Climbing.Connect((speed: number) => this.OnClimbing(speed));
+		this.humanoid.GettingUp.Connect(() => this.OnGettingUp());
+		this.humanoid.FreeFalling.Connect(() => this.OnFreeFall());
+		this.humanoid.FallingDown.Connect(() => this.OnFallingDown());
+		this.humanoid.Seated.Connect(() => this.OnSeated());
+		this.humanoid.PlatformStanding.Connect(() => this.OnPlatformStanding());
+		this.humanoid.Swimming.Connect((speed: number) => this.OnSwimming(speed));
 	}
 
 	Destroy() {
