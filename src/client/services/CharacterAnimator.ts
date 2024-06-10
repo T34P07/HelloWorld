@@ -33,7 +33,7 @@ export class CharacterAnimator {
 		if (this.pose === "Standing") this.PlayAnimation("Idle");
 	}
 
-	private UnloadAnimations(animations: Folder) {
+	public UnloadAnimations(animations: Folder) {
 		for (const animationPairs of pairs(this.animationTracks)) {
 			const [animationName, animationTracks] = animationPairs;
 

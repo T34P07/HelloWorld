@@ -5,5 +5,7 @@ export class WeaponTag extends ToolTag {
 		super(instance, toolclass);
 	}
 
-	Destroy() {}
+	Destroy() {
+		super.Destroy();
+	}
 }

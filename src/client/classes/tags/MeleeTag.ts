@@ -5,5 +5,7 @@ export class MeleeTag extends WeaponTag {
 		super(instance, toolclass);
 	}
 
-	Destroy() {}
+	Destroy() {
+		super.Destroy();
+	}
 }

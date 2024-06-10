@@ -5,5 +5,7 @@ export class KatanaTag extends MeleeTag {
 		super(instance, toolclass);
 	}
 
-	Destroy() {}
+	Destroy() {
+		super.Destroy();
+	}
 }

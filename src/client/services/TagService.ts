@@ -73,6 +73,9 @@ const TagService: TagServiceType = {
 		if (!tagHandler) return;
 
 		tagHandler.janitor.Destroy();
+		tagHandler.instances.forEach((instance) => {
+			instance!.Destroy();
+		});
 		TagService.tagHandlers[tag] = undefined;
 	},
 	Start: () => {
