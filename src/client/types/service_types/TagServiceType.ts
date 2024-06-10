@@ -1,5 +1,9 @@
 import { Janitor } from "@rbxts/janitor";
+import { KatanaTag } from "client/classes/tags/KatanaTag";
+import { MeleeTag } from "client/classes/tags/MeleeTag";
 import { Tag } from "client/classes/tags/Tag";
+import { ToolTag } from "client/classes/tags/ToolTag";
+import { WeaponTag } from "client/classes/tags/WeaponTag";
 
 export type TagConstructorType = new (instance: Instance, tag: string) => Tag;
 
@@ -9,11 +13,19 @@ export type TagHandlerType = {
 	janitor: Janitor;
 	instances: Map<Instance, Tag | undefined>;
 };
+
+export type TagClassesType = {
+	ToolTag: typeof ToolTag;
+	WeaponTag: typeof WeaponTag;
+	MeleeTag: typeof MeleeTag;
+	KatanaTag: typeof KatanaTag;
+};
+
 export type TagServiceType = {
-	TagHandlers: {
+	tagClasses: TagClassesType;
+	tagHandlers: {
 		[tag: string]: TagHandlerType | undefined;
 	};
-	GetTagClass: (tag: string) => TagConstructorType | void;
 	OnInstanceAdded: (tag: string, instance: Instance, tagHandler: TagHandlerType) => void;
 	OnInstanceRemoved: (tag: string, instance: Instance, tagHandler: TagHandlerType) => void;
 	OnTagAdded: (tag: string) => void;

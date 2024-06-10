@@ -8,6 +8,8 @@ import { deepCopy } from "@rbxts/deepcopy";
 import { CharacterAnimator } from "./CharacterAnimator";
 import { Players, RunService, Workspace } from "@rbxts/services";
 
+print("Module is initialized on VM");
+
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
 
@@ -39,6 +41,7 @@ const CharacterService: CharacterServiceType = {
 	OnCharacterRemoving: (character) => {
 		if (CharacterService.characterAnimator) {
 			CharacterService.characterAnimator.Destroy();
+			CharacterService.characterAnimator = undefined;
 		}
 	},
 	OnCharacterAdded: (character) => {
@@ -135,6 +138,10 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.rootJoint.instance.C1 = output.rootJoint.c1;
 
 		CharacterService.renderPipeline.PostUpdate(dt, characterNodeInput);
+	},
+	GetCharacterAnimator: () => {
+		print("return character animator", CharacterService.characterAnimator);
+		return CharacterService.characterAnimator;
 	},
 };
 

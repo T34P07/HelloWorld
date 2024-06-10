@@ -3,6 +3,8 @@ import InputService from "./services/InputService";
 import CameraService from "./services/CameraService";
 import ControlService from "./services/ControlService";
 import TagService from "./services/TagService";
+import { GuiService } from "@rbxts/services";
+import PlayerGuiService from "./services/PlayerGuiService";
 
 CharacterService.PreStart();
 InputService.Start();
@@ -10,3 +12,4 @@ CharacterService.Start();
 CameraService.Start();
 ControlService.Start();
 TagService.Start();
+PlayerGuiService.Start();

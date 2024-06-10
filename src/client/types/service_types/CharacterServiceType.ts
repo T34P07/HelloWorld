@@ -32,4 +32,5 @@ export type CharacterServiceType = {
 	PreStart: () => void;
 	Start: () => void;
 	Update: (dt: number) => void;
+	GetCharacterAnimator: () => CharacterAnimator | undefined;
 };

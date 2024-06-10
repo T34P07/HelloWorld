@@ -7,32 +7,28 @@ import {
 	TagServiceType,
 	TagClassModuleExportsType,
 	TagConstructorType,
+	TagClassesType,
 } from "client/types/service_types/TagServiceType";
-
-const tagClassModulesFolder = StarterPlayer.WaitForChild("StarterPlayerScripts")
-	.WaitForChild("TS")
-	.WaitForChild("classes")
-	.WaitForChild("tags");
+import { ToolTag } from "client/classes/tags/ToolTag";
+import { WeaponTag } from "client/classes/tags/WeaponTag";
+import { MeleeTag } from "client/classes/tags/MeleeTag";
+import { KatanaTag } from "client/classes/tags/KatanaTag";
 
 const TagService: TagServiceType = {
-	TagHandlers: {},
-	GetTagClass: (tag) => {
-		const className = tag + "Tag";
-		const classModule = tagClassModulesFolder.FindFirstChild(className) as ModuleScript | undefined;
-		if (!classModule) return;
-
-		const moduleExports = require(classModule) as TagClassModuleExportsType;
-		const tagClass = moduleExports[className] as TagConstructorType;
-
-		return tagClass;
+	tagClasses: {
+		ToolTag: ToolTag,
+		WeaponTag: WeaponTag,
+		MeleeTag: MeleeTag,
+		KatanaTag: KatanaTag,
 	},
+	tagHandlers: {},
 	OnInstanceAdded: (tag, instance, tagHandler) => {
 		if (instance.IsDescendantOf(Prefabs)) return;
 
 		let tagInstance = tagHandler.instances.get(instance);
 		if (tagInstance) return;
 
-		const TagClass = TagService.GetTagClass(tag);
+		const TagClass = TagService.tagClasses[`${tag}Tag` as keyof TagClassesType];
 		if (!TagClass) return;
 
 		tagInstance = new TagClass(instance, tag);
@@ -46,7 +42,7 @@ const TagService: TagServiceType = {
 		tagHandler.instances.set(instance, undefined);
 	},
 	OnTagAdded: (tag) => {
-		if (TagService.TagHandlers[tag]) return;
+		if (TagService.tagHandlers[tag]) return;
 
 		const janitor = new Janitor();
 		const tagHandler = {
@@ -54,7 +50,7 @@ const TagService: TagServiceType = {
 			instances: new Map<Instance, Tag | undefined>(),
 		};
 
-		TagService.TagHandlers[tag] = tagHandler;
+		TagService.tagHandlers[tag] = tagHandler;
 
 		janitor.Add(
 			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
@@ -73,11 +69,11 @@ const TagService: TagServiceType = {
 		});
 	},
 	OnTagRemoved: (tag: string) => {
-		const tagHandler = TagService.TagHandlers[tag];
+		const tagHandler = TagService.tagHandlers[tag];
 		if (!tagHandler) return;
 
 		tagHandler.janitor.Destroy();
-		TagService.TagHandlers[tag] = undefined;
+		TagService.tagHandlers[tag] = undefined;
 	},
 	Start: () => {
 		CollectionService.TagRemoved.Connect(TagService.OnTagRemoved);

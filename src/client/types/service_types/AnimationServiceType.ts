@@ -1,32 +1,8 @@
+type Animations = Map<string, AnimationTrack[]>;
+
 export type AnimationServiceType = {
-	figure: Model | undefined;
-	humanoid: Humanoid | undefined;
-	animator: Animator | undefined;
-	animationTracks: Record<string, AnimationTrack[]>;
-	pose: string;
-	animationTrack: AnimationTrack | undefined;
-	transitionTime: number;
-	lastJump: number;
-	jumpVar: number;
-	lastUpdate: number;
-	jumpAnimDuration: number;
-	LoadAnimations: (animations: Folder) => void;
-	UnloadAnimations: (animations: Folder) => void;
-	GetAnimationTrack: (animationTracks: AnimationTrack[]) => AnimationTrack | undefined;
-	PlayAnimation: (name: string, transitionTime: number | void) => AnimationTrack | void;
-	StopAllAnimations: () => void;
-	UnloadAllAnimations: () => void;
-	OnRunning: (speed: number) => void;
-	OnDied: () => void;
-	OnJumping: () => void;
-	OnClimbing: (speed: number) => void;
-	OnGettingUp: () => void;
-	OnFreeFall: () => void;
-	OnFallingDown: () => void;
-	OnSeated: () => void;
-	OnPlatformStanding: () => void;
-	OnSwimming: (speed: number) => void;
-	Update: () => void;
-	SetFigure: (figure: Model) => void;
-	Start: () => void;
+	animationsCollection: Map<string, Animations>;
+	LoadAnimations: (name: string, animator: Animator, animationsFolder: Folder) => void;
+	UnloadAnimations: (name: string, fadeTime: number) => void;
+	GetAnimationTrack: (name: string, animationName: string) => void;
 };

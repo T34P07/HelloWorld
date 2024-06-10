@@ -220,6 +220,8 @@ export class CharacterAnimator {
 		this.humanoid.Seated.Connect(() => this.OnSeated());
 		this.humanoid.PlatformStanding.Connect(() => this.OnPlatformStanding());
 		this.humanoid.Swimming.Connect((speed: number) => this.OnSwimming(speed));
+
+		return this;
 	}
 
 	Destroy() {
