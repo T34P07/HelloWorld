@@ -57,6 +57,7 @@ export class ActionAnimator {
 		if (!animationTrack) return;
 
 		animationTrack.Play(fadeTime);
+		return animationTrack;
 	}
 
 	public StopAnimation() {}

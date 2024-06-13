@@ -27,7 +27,6 @@ export class CharacterAnimator {
 			if (weight) animationTrack.AdjustWeight(weight);
 
 			animationTracks.push(animationTrack);
-			print(animationTracks);
 		});
 
 		if (this.pose === "Standing") this.PlayAnimation("Idle");

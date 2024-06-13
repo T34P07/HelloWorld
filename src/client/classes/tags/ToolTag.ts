@@ -2,16 +2,14 @@ import Prefabs from "shared/libraries/Prefabs";
 import { Tag } from "./Tag";
 import CharacterService from "client/services/CharacterService";
 import { ActionAnimator } from "client/services/ActionAnimator";
-import { Janitor } from "@rbxts/janitor";
+import { Trove } from "@rbxts/trove";
 
 export class ToolTag extends Tag {
-	protected tool: Tool;
-	protected class: string;
-	public janitor = new Janitor();
+	public trove = new Trove();
 	public actionAnimator = undefined as ActionAnimator | undefined;
 
 	private LoadAnimations() {
-		const animations = Prefabs.Animations.Tools.FindFirstChild(this.tool.Name, true);
+		const animations = Prefabs.Animations.Tools.FindFirstChild(this.instance.Name, true);
 		if (!animations) return;
 
 		const baseAnimations = animations.FindFirstChild("Base") as Folder | undefined;
@@ -32,7 +30,7 @@ export class ToolTag extends Tag {
 			this.actionAnimator = undefined;
 		}
 
-		const animations = Prefabs.Animations.Tools.FindFirstChild(this.tool.Name, true);
+		const animations = Prefabs.Animations.Tools.FindFirstChild(this.instance.Name, true);
 		if (!animations) return;
 
 		const baseAnimations = animations.FindFirstChild("Base") as Folder | undefined;
@@ -42,15 +40,13 @@ export class ToolTag extends Tag {
 	}
 
 	constructor(instance: Instance, toolclass: string) {
-		super();
-		this.tool = instance as Tool;
-		this.class = toolclass;
+		super(instance, toolclass);
 
 		this.LoadAnimations();
 	}
 
 	Destroy() {
-		this.janitor.Cleanup();
+		this.trove.clean();
 		this.UnloadAnimations();
 	}
 }

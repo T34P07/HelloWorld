@@ -22,7 +22,8 @@ export type CharacterServiceType = {
 	rootJoint: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
 	neck: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
 	rootAttach: Attachment | undefined;
-	noCharParams: RaycastParams;
+	noCharRaycastParams: RaycastParams;
+	noCharOverlapParams: OverlapParams;
 	animationTracks: Record<string, AnimationTrack>;
 	rootPart: Part | undefined;
 	renderPipeline: RenderPipeline;
@@ -32,5 +33,4 @@ export type CharacterServiceType = {
 	PreStart: () => void;
 	Start: () => void;
 	Update: (dt: number) => void;
-	GetCharacterAnimator: () => CharacterAnimator | undefined;
 };

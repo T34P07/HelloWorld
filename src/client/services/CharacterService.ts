@@ -8,8 +8,6 @@ import { deepCopy } from "@rbxts/deepcopy";
 import { CharacterAnimator } from "./CharacterAnimator";
 import { Players, RunService, Workspace } from "@rbxts/services";
 
-print("Module is initialized on VM");
-
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
 
@@ -34,7 +32,8 @@ const CharacterService: CharacterServiceType = {
 	rootJoint: undefined,
 	neck: undefined,
 	rootAttach: undefined,
-	noCharParams: new RaycastParams(),
+	noCharRaycastParams: new RaycastParams(),
+	noCharOverlapParams: new OverlapParams(),
 	animationTracks: {},
 	rootPart: undefined,
 	renderPipeline: new RenderPipeline([CharacterRotation, CharacterTilt]),
@@ -68,7 +67,8 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.neck = { instance: neck, c0: neck.C0, c1: neck.C1 };
 
 		CharacterService.rootAttach = CharacterService.hrp.WaitForChild("RootAttachment") as Attachment;
-		CharacterService.noCharParams.FilterDescendantsInstances = [CharacterService.char];
+		CharacterService.noCharRaycastParams.FilterDescendantsInstances = [CharacterService.char];
+		CharacterService.noCharOverlapParams.FilterDescendantsInstances = [CharacterService.char];
 
 		CharacterService.animationTracks = {};
 
@@ -108,7 +108,8 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.rootPart.Size = Vector3.one;
 		CharacterService.rootPart.Parent = Workspace;
 
-		CharacterService.noCharParams.FilterType = Enum.RaycastFilterType.Exclude;
+		CharacterService.noCharRaycastParams.FilterType = Enum.RaycastFilterType.Exclude;
+		CharacterService.noCharOverlapParams.FilterType = Enum.RaycastFilterType.Exclude;
 	},
 	Start: () => {
 		localPlayer.CharacterAdded.Connect(CharacterService.OnCharacterAdded);
@@ -138,10 +139,6 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.rootJoint.instance.C1 = output.rootJoint.c1;
 
 		CharacterService.renderPipeline.PostUpdate(dt, characterNodeInput);
-	},
-	GetCharacterAnimator: () => {
-		print("return character animator", CharacterService.characterAnimator);
-		return CharacterService.characterAnimator;
 	},
 };
 

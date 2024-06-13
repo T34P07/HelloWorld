@@ -1,4 +1,4 @@
-import { Janitor } from "@rbxts/janitor";
+import { Trove } from "@rbxts/trove";
 import { KatanaTag } from "client/classes/tags/KatanaTag";
 import { MeleeTag } from "client/classes/tags/MeleeTag";
 import { Tag } from "client/classes/tags/Tag";
@@ -10,7 +10,7 @@ export type TagConstructorType = new (instance: Instance, tag: string) => Tag;
 export type TagClassModuleExportsType = { [key: string]: unknown };
 
 export type TagHandlerType = {
-	janitor: Janitor;
+	trove: Trove;
 	instances: Map<Instance, Tag | undefined>;
 };
 

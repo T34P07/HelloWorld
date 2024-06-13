@@ -1,4 +1,3 @@
-import { Janitor } from "@rbxts/janitor";
 import { CollectionService, ServerScriptService } from "@rbxts/services";
 import Prefabs from "shared/libraries/Prefabs";
 import {
@@ -7,6 +6,7 @@ import {
 	TagConstructorType,
 } from "server/types/service_types/TagServiceTypes";
 import { Tag } from "server/classes/tags/Tag";
+import { Trove } from "@rbxts/trove";
 
 const tagClassModulesFolder = ServerScriptService.WaitForChild("TS").WaitForChild("classes").WaitForChild("tags");
 
@@ -43,21 +43,21 @@ const TagService: TagServiceType = {
 	OnTagAdded: (tag) => {
 		if (TagService.TagHandlers[tag]) return;
 
-		const janitor = new Janitor();
+		const trove = new Trove();
 		const tagHandler = {
-			janitor: janitor,
+			trove: trove,
 			instances: new Map<Instance, Tag | undefined>(),
 		};
 
 		TagService.TagHandlers[tag] = tagHandler;
 
-		janitor.Add(
+		trove.add(
 			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
 				TagService.OnInstanceRemoved(tag, instance, tagHandler);
 			}),
 		);
 
-		janitor.Add(
+		trove.add(
 			CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
 				TagService.OnInstanceAdded(tag, instance, tagHandler);
 			}),
@@ -71,7 +71,7 @@ const TagService: TagServiceType = {
 		const tagHandler = TagService.TagHandlers[tag];
 		if (!tagHandler) return;
 
-		tagHandler.janitor.Destroy();
+		tagHandler.trove.destroy();
 		TagService.TagHandlers[tag] = undefined;
 	},
 	Start: () => {

@@ -1,4 +1,3 @@
-import { Janitor } from "@rbxts/janitor";
 import { CollectionService, StarterPlayer } from "@rbxts/services";
 import { Tag } from "client/classes/tags/Tag";
 
@@ -13,6 +12,7 @@ import { ToolTag } from "client/classes/tags/ToolTag";
 import { WeaponTag } from "client/classes/tags/WeaponTag";
 import { MeleeTag } from "client/classes/tags/MeleeTag";
 import { KatanaTag } from "client/classes/tags/KatanaTag";
+import { Trove } from "@rbxts/trove";
 
 const TagService: TagServiceType = {
 	tagClasses: {
@@ -44,21 +44,21 @@ const TagService: TagServiceType = {
 	OnTagAdded: (tag) => {
 		if (TagService.tagHandlers[tag]) return;
 
-		const janitor = new Janitor();
+		const trove = new Trove();
 		const tagHandler = {
-			janitor: janitor,
+			trove: trove,
 			instances: new Map<Instance, Tag | undefined>(),
 		};
 
 		TagService.tagHandlers[tag] = tagHandler;
 
-		janitor.Add(
+		trove.add(
 			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
 				TagService.OnInstanceRemoved(tag, instance, tagHandler);
 			}),
 		);
 
-		janitor.Add(
+		trove.add(
 			CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
 				TagService.OnInstanceAdded(tag, instance, tagHandler);
 			}),
@@ -72,7 +72,7 @@ const TagService: TagServiceType = {
 		const tagHandler = TagService.tagHandlers[tag];
 		if (!tagHandler) return;
 
-		tagHandler.janitor.Destroy();
+		tagHandler.trove.destroy();
 		tagHandler.instances.forEach((instance) => {
 			instance!.Destroy();
 		});
