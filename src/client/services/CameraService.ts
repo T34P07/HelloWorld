@@ -44,23 +44,27 @@ const CameraService: CameraServiceType = {
 		camera!.SetAttribute("Mode", 0);
 		camera!.SetAttribute("SubMode", 0);
 
-		InputService.BindAction("CameraModeCycle", (actionName, userInputState, inputObject) => {
-			if (userInputState !== Enum.UserInputState.Begin) return;
+		InputService.BindAction("CameraModeCycle").Connect(
+			(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {
+				if (userInputState !== Enum.UserInputState.Begin) return;
 
-			const mode = camera!.GetAttribute("Mode") as number;
-			camera!.SetAttribute("Mode", mode < CameraConfig.Modes.size() - 1 ? mode + 1 : 0);
-			camera!.SetAttribute("SubMode", 0);
-		});
+				const mode = camera!.GetAttribute("Mode") as number;
+				camera!.SetAttribute("Mode", mode < CameraConfig.Modes.size() - 1 ? mode + 1 : 0);
+				camera!.SetAttribute("SubMode", 0);
+			},
+		);
 
-		InputService.BindAction("CameraSubModeCycle", (actionName, userInputState, inputObject) => {
-			if (userInputState !== Enum.UserInputState.Begin) return;
+		InputService.BindAction("CameraSubModeCycle").Connect(
+			(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {
+				if (userInputState !== Enum.UserInputState.Begin) return;
 
-			const mode = camera!.GetAttribute("Mode") as number;
-			const cameraModeConfig = CameraConfig.Modes[mode];
+				const mode = camera!.GetAttribute("Mode") as number;
+				const cameraModeConfig = CameraConfig.Modes[mode];
 
-			const submode = camera!.GetAttribute("SubMode") as number;
-			camera!.SetAttribute("SubMode", submode < cameraModeConfig.SubModes.size() - 1 ? submode + 1 : 0);
-		});
+				const submode = camera!.GetAttribute("SubMode") as number;
+				camera!.SetAttribute("SubMode", submode < cameraModeConfig.SubModes.size() - 1 ? submode + 1 : 0);
+			},
+		);
 	},
 };
 

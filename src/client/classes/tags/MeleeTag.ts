@@ -61,10 +61,15 @@ export class MeleeTag extends WeaponTag {
 		super(instance, toolclass);
 		this.collider = this.instance.FindFirstChild("Collider", true) as BasePart;
 
+		print("bind action!");
 		this.trove.add(
-			(this.instance as Tool).Activated.Connect(() => {
-				this.Attack();
-			}),
+			InputService.BindAction("Attack").Connect(
+				(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {
+					if (userInputState !== Enum.UserInputState.Begin) return;
+
+					this.Attack();
+				},
+			),
 		);
 	}
 

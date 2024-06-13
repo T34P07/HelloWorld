@@ -8,6 +8,15 @@ export class ToolTag extends Tag {
 	public trove = new Trove();
 	public actionAnimator = undefined as ActionAnimator | undefined;
 
+	protected Equipped() {
+		print("equipped", this.instance);
+		this.LoadAnimations();
+	}
+	protected Unequipped() {
+		print("unequipped");
+		this.UnloadAnimations();
+	}
+
 	private LoadAnimations() {
 		const animations = Prefabs.Animations.Tools.FindFirstChild(this.instance.Name, true);
 		if (!animations) return;
@@ -42,7 +51,17 @@ export class ToolTag extends Tag {
 	constructor(instance: Instance, toolclass: string) {
 		super(instance, toolclass);
 
-		this.LoadAnimations();
+		this.trove.add(
+			(instance as Tool).Equipped.Connect(() => {
+				this.Equipped();
+			}),
+		);
+
+		this.trove.add(
+			(instance as Tool).Equipped.Connect(() => {
+				this.Unequipped();
+			}),
+		);
 	}
 
 	Destroy() {

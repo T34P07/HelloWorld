@@ -25,8 +25,7 @@ const ControlService = {
 			lastGrounded = 0;
 		}
 
-		if (worldMoveDirection === Vector3.zero && (!isGrounded || (lastGrounded && os.clock() - lastGrounded < 0.25)))
-			worldMoveDirection = ControlService.worldMoveDirection;
+		if (!isGrounded) worldMoveDirection = ControlService.worldMoveDirection;
 
 		CharacterService.hum.Move(ControlService.worldMoveDirection.Lerp(worldMoveDirection, 10 * dt));
 		ControlService.worldMoveDirection = worldMoveDirection;
