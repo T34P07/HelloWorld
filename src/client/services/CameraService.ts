@@ -8,6 +8,8 @@ import InputService from "client/services/InputService";
 import { CameraNodeInputType } from "client/types/node_types/CameraNodeInputType";
 
 import { Workspace, RunService, UserInputService, Players } from "@rbxts/services";
+import Prefabs from "shared/libraries/Prefabs";
+import { ViewmodelCFrame } from "client/render_pipeline/nodes/camera_nodes/viewmodel_nodes/ViewmodelCFrame";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -16,8 +18,9 @@ const CameraService: CameraServiceType = {
 	modifiers: {
 		principalAxes: {},
 	},
-	renderPipeline: new RenderPipeline([CameraCFrame, CameraSway]),
+	renderPipeline: new RenderPipeline([CameraCFrame, CameraSway, ViewmodelCFrame]),
 	camera: Workspace.CurrentCamera,
+	viewmodel: Prefabs.Camera.Viewmodel.Clone(),
 	Update: (dt) => {
 		if (!CameraService.camera || !CharacterService.head || !CharacterService.hrp) return;
 
@@ -31,10 +34,12 @@ const CameraService: CameraServiceType = {
 
 		const input: CameraNodeInputType = {
 			camera: { instance: CameraService.camera, cf: headCF },
+			viewmodel: { instance: CameraService.viewmodel, cf: CameraService.viewmodel.PrimaryPart!.CFrame },
 		};
 
 		const output = CameraService.renderPipeline.Update(dt, input);
 		CameraService.camera!.CFrame = output.camera.cf;
+		CameraService.viewmodel.PrimaryPart!.CFrame = output.viewmodel.cf;
 
 		CameraService.renderPipeline.PostUpdate(dt);
 	},
@@ -43,6 +48,7 @@ const CameraService: CameraServiceType = {
 		camera!.FieldOfView = CameraConfig.FOV;
 		camera!.SetAttribute("Mode", 0);
 		camera!.SetAttribute("SubMode", 0);
+		CameraService.viewmodel.Parent = CameraService.camera;
 
 		InputService.BindAction("CameraModeCycle").Connect(
 			(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {

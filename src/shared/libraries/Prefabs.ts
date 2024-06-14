@@ -15,6 +15,16 @@ interface Prefabs extends Folder {
 			};
 		};
 	};
+	Camera: Folder & {
+		Viewmodel: Model & {
+			["Body Colors"]: BodyColors;
+			Humanoid: Humanoid;
+			HumanoidRootPart: Part;
+			["Left Arm"]: Part;
+			["Right Arm"]: Part;
+			Torso: Part;
+		};
+	};
 	Tools: Folder;
 }
 

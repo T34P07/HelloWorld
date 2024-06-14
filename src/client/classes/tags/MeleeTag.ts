@@ -57,12 +57,10 @@ export class MeleeTag extends WeaponTag {
 		animationTrack.Play(0.25);
 	}
 
-	constructor(instance: Instance, toolclass: string) {
-		super(instance, toolclass);
-		this.collider = this.instance.FindFirstChild("Collider", true) as BasePart;
+	protected Equipped(): boolean {
+		if (!super.Equipped()) return false;
 
-		print("bind action!");
-		this.trove.add(
+		this.actionTrove.add(
 			InputService.BindAction("Attack").Connect(
 				(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {
 					if (userInputState !== Enum.UserInputState.Begin) return;
@@ -71,6 +69,17 @@ export class MeleeTag extends WeaponTag {
 				},
 			),
 		);
+
+		return true;
+	}
+
+	protected Unequipped(): void {
+		super.Unequipped();
+	}
+
+	constructor(instance: Instance, toolclass: string) {
+		super(instance, toolclass);
+		this.collider = this.instance.FindFirstChild("Collider", true) as BasePart;
 	}
 
 	Destroy() {
