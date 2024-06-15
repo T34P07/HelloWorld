@@ -1,4 +1,3 @@
-import { Workspace } from "@rbxts/services";
 import RunConfig from "client/config/RunConfig";
 
 type AnimationTracks = {
@@ -52,7 +51,6 @@ export class CharacterAnimator {
 			const weight = animation.GetAttribute("Weight") as number;
 
 			if (weight) animationTrack.AdjustWeight(weight);
-
 			animationTracks.push(animationTrack);
 		});
 
@@ -107,12 +105,10 @@ export class CharacterAnimator {
 
 		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
 			const animationTracks = groupAnimationsTracks.get(name);
-			if (!animationTracks) {
-				return;
-			}
+			if (!animationTracks) continue;
 
 			const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
-			if (!animationTrack) return;
+			if (!animationTrack) continue;
 
 			animationTrack.Play(transitionTime);
 		}
@@ -122,11 +118,11 @@ export class CharacterAnimator {
 		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
 			const animationTracks = groupAnimationsTracks.get(name);
 			if (!animationTracks) {
-				return;
+				continue;
 			}
 
 			const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
-			if (!animationTrack) return;
+			if (!animationTrack) continue;
 
 			animationTrack.Stop(transitionTime);
 		}
@@ -138,7 +134,7 @@ export class CharacterAnimator {
 				const [_, animationTracks] = animationPairs;
 
 				const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
-				if (!animationTrack) return;
+				if (!animationTrack) continue;
 
 				animationTrack.AdjustSpeed(speed);
 			}

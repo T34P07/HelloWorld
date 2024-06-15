@@ -30,6 +30,7 @@ const CharacterService: CharacterServiceType = {
 	rightLeg: undefined,
 	animator: undefined,
 	rootJoint: undefined,
+	bodyColors: undefined,
 	neck: undefined,
 	rootAttach: undefined,
 	noCharRaycastParams: new RaycastParams(),
@@ -55,6 +56,7 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.leftLeg = CharacterService.char.WaitForChild("Left Leg") as Part;
 		CharacterService.rightLeg = CharacterService.char.WaitForChild("Right Leg") as Part;
 		CharacterService.animator = CharacterService.hum.WaitForChild("Animator") as Animator;
+		CharacterService.bodyColors = CharacterService.char.WaitForChild("Body Colors") as BodyColors;
 
 		CharacterService.hum.CameraOffset = new Vector3(0, 0, 1);
 		CharacterService.hum.WalkSpeed = 30;
@@ -79,9 +81,10 @@ const CharacterService: CharacterServiceType = {
 		//});
 
 		const viewmodel = camera!.WaitForChild("Viewmodel") as Model;
+		CharacterService.bodyColors.Clone().Parent = viewmodel;
 
 		ContentProvider.PreloadAsync([CharacterService.char, viewmodel, Prefabs.Animations.Movement.Base]);
-		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char);
+		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char, viewmodel);
 		CharacterService.characterAnimator.LoadAnimations(Prefabs.Animations.Movement.Base);
 	},
 	OnViewmodelUpdate: () => {

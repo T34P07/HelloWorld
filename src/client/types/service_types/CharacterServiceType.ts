@@ -19,6 +19,7 @@ export type CharacterServiceType = {
 	leftLeg: Part | undefined;
 	rightLeg: Part | undefined;
 	animator: Animator | undefined;
+	bodyColors: BodyColors | undefined;
 	rootJoint: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
 	neck: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
 	rootAttach: Attachment | undefined;
