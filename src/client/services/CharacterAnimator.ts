@@ -1,27 +1,54 @@
+import { Workspace } from "@rbxts/services";
 import RunConfig from "client/config/RunConfig";
 
+type AnimationTracks = {
+	character: Map<string, AnimationTrack[]>;
+	viewmodel: Map<string, AnimationTrack[]>;
+};
+
+type Rigs = {
+	character: Model | undefined;
+	viewmodel: Model | undefined;
+};
+
+type RigName = "viewmodel" | "character";
+
 export class CharacterAnimator {
-	private character;
 	private humanoid;
-	private animator;
+	private rigs: Rigs = {
+		character: undefined,
+		viewmodel: undefined,
+	};
 	private pose = "Idle";
+	private lastPose: string = "";
 	private transitionTime: number = 0.25;
 	private lastJump: number = 0;
 	private jumpVar: number = 1;
 	private lastUpdate: number = 0;
 	private jumpAnimDuration: number = 1;
-	private animationTracks: Map<string, AnimationTrack[]> = new Map<string, AnimationTrack[]>();
-	private animationTrack: AnimationTrack | undefined;
+	private animationTracks: AnimationTracks = {
+		character: new Map<string, AnimationTrack[]>(),
+		viewmodel: new Map<string, AnimationTrack[]>(),
+	};
 
 	public LoadAnimations(animations: Folder) {
 		animations.GetDescendants().forEach((animation) => {
-			if (!animation.IsA("Animation") || !this.animator) return;
+			if (!animation.IsA("Animation")) return;
 
-			let animationTracks = this.animationTracks.get(animation.Name);
+			const groupName = animation.Parent!.Name.lower() as RigName;
+			const groupAnimationTracks = this.animationTracks[groupName];
+
+			const rig = this.rigs[groupName];
+			if (!rig) return;
+
+			const animator = rig.FindFirstChildWhichIsA("Animator", true);
+			if (!animator) return;
+
+			let animationTracks = groupAnimationTracks.get(animation.Name);
 			animationTracks = animationTracks ? animationTracks : [];
-			this.animationTracks.set(animation.Name, animationTracks);
+			groupAnimationTracks.set(animation.Name, animationTracks);
 
-			const animationTrack = this.animator.LoadAnimation(animation);
+			const animationTrack = animator.LoadAnimation(animation);
 			const weight = animation.GetAttribute("Weight") as number;
 
 			if (weight) animationTrack.AdjustWeight(weight);
@@ -29,24 +56,26 @@ export class CharacterAnimator {
 			animationTracks.push(animationTrack);
 		});
 
-		if (this.pose === "Standing") this.PlayAnimation("Idle");
+		if (this.pose === "Idle") this.PlayAnimation("Idle");
 	}
 
 	public UnloadAnimations(animations: Folder) {
-		for (const animationPairs of pairs(this.animationTracks)) {
-			const [animationName, animationTracks] = animationPairs;
+		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			for (const animationPairs of pairs(groupAnimationsTracks)) {
+				const [_, animationTracks] = animationPairs;
 
-			animationTracks.forEach((animationTrack, index) => {
-				if (animationTrack.Animation && animationTrack.Animation.IsDescendantOf(animations)) {
-					animationTrack.Stop();
-					animationTracks.remove(index);
-				}
+				animationTracks.forEach((animationTrack, index) => {
+					if (animationTrack.Animation && animationTrack.Animation.IsDescendantOf(animations)) {
+						animationTrack.Stop();
+						animationTracks.remove(index);
+					}
 
-				return;
-			});
+					return;
+				});
+			}
 		}
 
-		if (this.pose === "Standing") this.PlayAnimation("Idle");
+		if (this.pose === "Idle") this.PlayAnimation("Idle");
 	}
 
 	private GetAnimationTrack(animationTracks: AnimationTrack[]) {
@@ -71,53 +100,83 @@ export class CharacterAnimator {
 		}
 	}
 
-	private PlayAnimation(name: string, transitionTime?: number) {
-		transitionTime = transitionTime ?? this.transitionTime;
+	private PlayAnimation(name: string, transitionTime: number = this.transitionTime) {
+		if (name === this.lastPose) return;
+		this.StopAnimation(this.lastPose, transitionTime);
+		this.lastPose = name;
 
-		const animationTracks = this.animationTracks.get(name);
-		if (!animationTracks) return;
+		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			const animationTracks = groupAnimationsTracks.get(name);
+			if (!animationTracks) {
+				return;
+			}
 
-		const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
-		if (!animationTrack) return;
-
-		if (animationTrack !== this.animationTrack) {
-			if (this.animationTrack) this.animationTrack.Stop(transitionTime);
+			const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
+			if (!animationTrack) return;
 
 			animationTrack.Play(transitionTime);
-			this.animationTrack = animationTrack;
 		}
+	}
 
-		return animationTrack;
+	private StopAnimation(name: string, transitionTime?: number) {
+		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			const animationTracks = groupAnimationsTracks.get(name);
+			if (!animationTracks) {
+				return;
+			}
+
+			const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
+			if (!animationTrack) return;
+
+			animationTrack.Stop(transitionTime);
+		}
+	}
+
+	private AdjustAnimationSpeed(name: string, speed: number) {
+		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			for (const animationPairs of pairs(groupAnimationsTracks)) {
+				const [_, animationTracks] = animationPairs;
+
+				const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
+				if (!animationTrack) return;
+
+				animationTrack.AdjustSpeed(speed);
+			}
+		}
 	}
 
 	private StopAllAnimations() {
-		for (const animationPairs of pairs(this.animationTracks)) {
-			const [animationName, animationTracks] = animationPairs;
+		for (const [_, animationsTracksGroup] of pairs(this.animationTracks)) {
+			for (const animationPairs of pairs(animationsTracksGroup)) {
+				const [_, animationTracks] = animationPairs;
 
-			animationTracks.forEach((animationTrack) => {
-				animationTrack.Stop();
-			});
+				animationTracks.forEach((animationTrack) => {
+					animationTrack.Stop();
+				});
+			}
 		}
 	}
 
 	private UnloadAllAnimations() {
 		this.StopAllAnimations();
-		this.animationTracks = new Map<string, AnimationTrack[]>();
+
+		this.animationTracks = {
+			character: new Map<string, AnimationTrack[]>(),
+			viewmodel: new Map<string, AnimationTrack[]>(),
+		};
 	}
 
 	private OnRunning(speed: number) {
-		if (!this.character) return;
-		speed /= this.character.GetScale();
+		if (!this.rigs.character) return;
+		speed /= this.rigs.character.GetScale();
 
 		if (speed > 0.1) {
-			const animationTrack = this.PlayAnimation("Run");
-
-			if (animationTrack) animationTrack.AdjustSpeed(speed / RunConfig.Speed);
-
-			this.pose = "Running";
+			this.pose = "Run";
+			this.PlayAnimation("Run");
+			this.AdjustAnimationSpeed("Run", speed / RunConfig.Speed);
 		} else {
+			this.pose = "Idle";
 			this.PlayAnimation("Idle");
-			this.pose = "Standing";
 		}
 	}
 
@@ -138,76 +197,81 @@ export class CharacterAnimator {
 			this.jumpVar = 3 - this.jumpVar;
 		}
 
-		this.PlayAnimation(jumpAnim);
+		this.pose = "Jump";
 		this.humanoid.SetAttribute("JumpAnim", undefined);
-		this.pose = "Jumping";
+		this.PlayAnimation(jumpAnim);
 	}
 
 	private OnClimbing(speed: number) {
-		if (!this.character) return;
-		speed /= this.character.GetScale();
+		if (!this.rigs.character) return;
+		speed /= this.rigs.character.GetScale();
 
-		const animationTrack = this.PlayAnimation("Climb");
-		if (animationTrack) animationTrack.AdjustSpeed(speed / 12);
-		this.pose = "Climbing";
+		this.pose = "Climb";
+		this.PlayAnimation("Climb");
+		this.AdjustAnimationSpeed("Climb", speed / 12);
 	}
 
 	private OnGettingUp() {
-		this.pose = "GettingUp";
+		this.pose = "GetUp";
 	}
 
 	private OnFreeFall() {
 		const now = os.clock();
+		if (now - this.lastJump >= this.jumpAnimDuration) {
+			this.PlayAnimation("FreeFall");
+		}
 
-		if (now - this.lastJump >= this.jumpAnimDuration) this.PlayAnimation("Fall");
 		this.pose = "FreeFall";
 	}
 
 	private OnFallingDown() {
-		this.pose = "FallingDown";
+		this.pose = "FallDown";
 	}
 
 	private OnSeated() {
-		this.pose = "Seated";
+		this.pose = "Sit";
 	}
 
 	private OnPlatformStanding() {
-		this.pose = "PlatformStanding";
+		this.pose = "PlatformStand";
 	}
 
 	private OnSwimming(speed: number) {
-		if (speed > 0) this.pose = "Running";
-		else this.pose = "Standing";
+		if (speed > 0) this.pose = "Run";
+		else this.pose = "Idle";
 	}
 
 	public Update() {
-		if (!this.character) return;
+		if (!this.rigs.character) return;
 
 		const now = os.clock();
 		if (now - this.lastUpdate < 0.1) return;
 		this.lastUpdate = now;
-
-		if (this.pose === "FreeFall" && now - this.lastJump >= this.jumpAnimDuration) this.PlayAnimation("Fall");
-		else if (this.pose === "Seated") {
+		if (this.pose === "FreeFall" && now - this.lastJump >= this.jumpAnimDuration) {
+			this.PlayAnimation("FreeFall");
+		} else if (this.pose === "Sit") {
 			this.PlayAnimation("Sit");
 			return;
-		} else if (this.pose === "Running") this.PlayAnimation("Run");
+		} else if (this.pose === "Run") this.PlayAnimation("Run");
 		else if (
 			this.pose === "Dead" ||
-			this.pose === "GettingUp" ||
-			this.pose === "FallingDown" ||
-			this.pose === "Seated" ||
-			this.pose === "PlatformStanding"
+			this.pose === "GetUp" ||
+			this.pose === "FallDown" ||
+			this.pose === "Sit" ||
+			this.pose === "PlatformStand"
 		)
 			this.StopAllAnimations();
 	}
 
-	constructor(character: Model) {
+	constructor(character: Model, viewmodel?: Model | undefined) {
 		this.UnloadAllAnimations();
 
-		this.character = character;
-		this.humanoid = this.character.WaitForChild("Humanoid") as Humanoid;
-		this.animator = this.humanoid.WaitForChild("Animator") as Animator;
+		this.humanoid = character.WaitForChild("Humanoid") as Humanoid;
+
+		this.rigs = {
+			character: character,
+			viewmodel: viewmodel,
+		};
 
 		this.humanoid.Died.Connect(() => this.OnDied());
 		this.humanoid.Running.Connect((speed: number) => this.OnRunning(speed));

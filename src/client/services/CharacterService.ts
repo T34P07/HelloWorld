@@ -6,7 +6,7 @@ import { RenderPipeline } from "../render_pipeline/RenderPipeline";
 import { CharacterNodeInputType } from "client/types/node_types/CharacterNodeInputType";
 import { deepCopy } from "@rbxts/deepcopy";
 import { CharacterAnimator } from "./CharacterAnimator";
-import { Players, RunService, Workspace } from "@rbxts/services";
+import { ContentProvider, Players, RunService, Workspace } from "@rbxts/services";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -72,12 +72,15 @@ const CharacterService: CharacterServiceType = {
 
 		CharacterService.animationTracks = {};
 
-		Prefabs.Animations.Movement.Abilities.GetDescendants().forEach((animation) => {
-			if (!animation.IsA("Animation") || !CharacterService.animator) return;
+		//Prefabs.Animations.Movement.Abilities.GetDescendants().forEach((animation) => {
+		//	if (!animation.IsA("Animation") || !CharacterService.animator) return;
+		//
+		//	CharacterService.animationTracks[animation.Name] = CharacterService.animator.LoadAnimation(animation);
+		//});
 
-			CharacterService.animationTracks[animation.Name] = CharacterService.animator.LoadAnimation(animation);
-		});
+		const viewmodel = camera!.WaitForChild("Viewmodel") as Model;
 
+		ContentProvider.PreloadAsync([CharacterService.char, viewmodel, Prefabs.Animations.Movement.Base]);
 		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char);
 		CharacterService.characterAnimator.LoadAnimations(Prefabs.Animations.Movement.Base);
 	},
