@@ -1,7 +1,6 @@
 import { InputServiceType } from "client/types/service_types/InputServiceType";
 import InputConfig from "../config/InputConfig";
 import { Signal } from "@rbxts/beacon";
-import { Trove } from "@rbxts/trove";
 
 const UserInputService = game.GetService("UserInputService");
 

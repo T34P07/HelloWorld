@@ -6,18 +6,22 @@ let lastGrounded = 0;
 
 const ControlService = {
 	worldMoveDirection: Vector3.zero,
+	moveDirection: Vector3.zero,
 	AddController: (character: Model) => {},
 	Update: (dt: number) => {
 		if (!CharacterService.hrp || !CharacterService.hum) return;
 		const hrpCF = CharacterService.hrp.CFrame;
 		const isGrounded = CharacterService.hum.FloorMaterial !== Enum.Material.Air;
 
-		const moveDirection = new Vector2(
-			(InputService.IsInputActive("MoveForward") ? 1 : 0) - (InputService.IsInputActive("MoveBackward") ? 1 : 0),
+		ControlService.moveDirection = new Vector3(
 			(InputService.IsInputActive("MoveRight") ? 1 : 0) - (InputService.IsInputActive("MoveLeft") ? 1 : 0),
+			0,
+			(InputService.IsInputActive("MoveForward") ? 1 : 0) - (InputService.IsInputActive("MoveBackward") ? 1 : 0),
 		);
 
-		let worldMoveDirection = hrpCF.RightVector.mul(moveDirection.Y).add(hrpCF.LookVector.mul(moveDirection.X));
+		let worldMoveDirection = hrpCF.RightVector.mul(ControlService.moveDirection.X).add(
+			hrpCF.LookVector.mul(ControlService.moveDirection.Z),
+		);
 
 		if (isGrounded && !lastGrounded) {
 			lastGrounded = os.clock();

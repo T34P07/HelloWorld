@@ -7,6 +7,7 @@ import { CharacterNodeInputType } from "client/types/node_types/CharacterNodeInp
 import { deepCopy } from "@rbxts/deepcopy";
 import { CharacterAnimator } from "./CharacterAnimator";
 import { ContentProvider, Players, RunService, Workspace } from "@rbxts/services";
+import RunConfig from "client/config/RunConfig";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -59,7 +60,7 @@ const CharacterService: CharacterServiceType = {
 		CharacterService.bodyColors = CharacterService.char.WaitForChild("Body Colors") as BodyColors;
 
 		CharacterService.hum.CameraOffset = new Vector3(0, 0, 1);
-		CharacterService.hum.WalkSpeed = 30;
+		CharacterService.hum.WalkSpeed = RunConfig.Speed;
 		CharacterService.hum.AutoRotate = false;
 
 		const rootJoint = CharacterService.hrp.WaitForChild("RootJoint") as Motor6D;
@@ -94,6 +95,9 @@ const CharacterService: CharacterServiceType = {
 
 		CharacterService.char.GetDescendants().forEach((child) => {
 			if (child.IsA("BasePart") || child.IsA("Decal")) {
+				child.LocalTransparencyModifier = 1;
+
+				/*
 				child.LocalTransparencyModifier =
 					mode !== 0
 						? 0
@@ -101,6 +105,7 @@ const CharacterService: CharacterServiceType = {
 							  child.FindFirstAncestorWhichIsA("Tool")
 							? child.Transparency
 							: 1;
+			*/
 			}
 		});
 	},

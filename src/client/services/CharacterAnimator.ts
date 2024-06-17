@@ -20,7 +20,7 @@ export class CharacterAnimator {
 	};
 	private pose = "Idle";
 	private lastPose: string = "";
-	private transitionTime: number = 0.25;
+	private transitionTime: number = 0.2;
 	private lastJump: number = 0;
 	private jumpVar: number = 1;
 	private lastUpdate: number = 0;

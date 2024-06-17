@@ -33,7 +33,7 @@ const CameraConfig: CameraConfigType = {
 			],
 		},
 	],
-	FOV: 120,
+	FOV: 80,
 	Clamp: math.rad(80),
 };
 

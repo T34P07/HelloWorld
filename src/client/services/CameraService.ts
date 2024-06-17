@@ -10,6 +10,8 @@ import { CameraNodeInputType } from "client/types/node_types/CameraNodeInputType
 import { Workspace, RunService, UserInputService, Players } from "@rbxts/services";
 import Prefabs from "shared/libraries/Prefabs";
 import { ViewmodelCFrame } from "client/render_pipeline/nodes/camera_nodes/viewmodel_nodes/ViewmodelCFrame";
+import { ViewmodelSway } from "./../render_pipeline/nodes/camera_nodes/viewmodel_nodes/ViewmodelSway";
+import { ViewmodelBobble } from "client/render_pipeline/nodes/camera_nodes/viewmodel_nodes/ViewmodelBobble";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -18,7 +20,7 @@ const CameraService: CameraServiceType = {
 	modifiers: {
 		principalAxes: {},
 	},
-	renderPipeline: new RenderPipeline([CameraCFrame, CameraSway, ViewmodelCFrame]),
+	renderPipeline: new RenderPipeline([CameraCFrame, CameraSway, ViewmodelCFrame, ViewmodelSway, ViewmodelBobble]),
 	camera: Workspace.CurrentCamera,
 	viewmodel: Prefabs.Camera.Viewmodel.Clone(),
 	Update: (dt) => {
@@ -42,6 +44,7 @@ const CameraService: CameraServiceType = {
 		CameraService.viewmodel.PrimaryPart!.CFrame = output.viewmodel.cf;
 
 		CameraService.renderPipeline.PostUpdate(dt);
+		UserInputService.MouseIconEnabled = false;
 	},
 	Start: () => {
 		RunService.BindToRenderStep("CameraUpdate", Enum.RenderPriority.Camera.Value, CameraService.Update);

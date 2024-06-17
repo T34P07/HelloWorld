@@ -1,5 +1,5 @@
 const RunConfig = {
-	Speed: 30,
+	Speed: 50,
 };
 
 export default RunConfig;
