@@ -9,7 +9,7 @@ export class ToolTag extends Tag {
 		this.tool.GetDescendants().forEach((motor6D) => {
 			if (!motor6D.IsA("Motor6D") || !motor6D.HasTag("RigAttach")) return;
 
-			const RigPartName = motor6D.GetAttribute("RigPart") as string | undefined;
+			const RigPartName = motor6D.GetAttribute("CharacterPart") as string | undefined;
 			if (!RigPartName) return;
 
 			const RigPart = this.rig!.FindFirstChild(RigPartName) as BasePart;
@@ -17,6 +17,8 @@ export class ToolTag extends Tag {
 
 			motor6D.Part0 = motor6D.Part0 !== undefined ? motor6D.Part0 : RigPart;
 			motor6D.Part1 = motor6D.Part1 !== undefined ? motor6D.Part1 : RigPart;
+			motor6D.C0 = motor6D.GetAttribute("CharacterC0") as CFrame;
+			motor6D.C1 = motor6D.GetAttribute("CharacterC1") as CFrame;
 		});
 	}
 
