@@ -103,8 +103,7 @@ const CharacterService: CharacterServiceType = {
 				descendant.LocalTransparencyModifier =
 					mode !== 0
 						? 0
-						: CharacterService.viewmodelParts.find((part) => part === descendant.Name) ||
-							  descendant.FindFirstAncestorWhichIsA("Tool")
+						: CharacterService.viewmodelParts.find((part) => part === descendant.Name)
 							? descendant.Transparency
 							: 1;
 			}
@@ -112,7 +111,9 @@ const CharacterService: CharacterServiceType = {
 
 		CharacterService.viewmodel.GetDescendants().forEach((descendant: Instance) => {
 			if (descendant.IsA("BasePart") || descendant.IsA("Decal")) {
-				descendant.LocalTransparencyModifier = 1;
+				descendant.LocalTransparencyModifier = CharacterService.char!.FindFirstChild("Tool")
+					? descendant.Transparency
+					: 1;
 			}
 		});
 	},

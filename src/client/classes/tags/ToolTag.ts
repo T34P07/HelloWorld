@@ -32,13 +32,13 @@ export class ToolTag extends Tag {
 		const baseAnimations = animations.FindFirstChild("Base") as Folder | undefined;
 		const actionAnimations = animations.FindFirstChild("Action") as Folder | undefined;
 
-		if (baseAnimations && CharacterService.characterAnimator)
-			CharacterService.characterAnimator.LoadAnimations(baseAnimations);
-
-		if (actionAnimations && CharacterService.animator) {
-			this.actionAnimator = new ActionAnimator(CharacterService.animator);
-			this.actionAnimator.LoadAnimations(actionAnimations);
-		}
+		//if (baseAnimations && CharacterService.characterAnimator)
+		//	CharacterService.characterAnimator.LoadAnimations(baseAnimations);
+		//
+		//if (actionAnimations && CharacterService.animator) {
+		//	this.actionAnimator = new ActionAnimator(CharacterService.animator);
+		//	this.actionAnimator.LoadAnimations(actionAnimations);
+		//}
 	}
 
 	private UnloadAnimations() {
