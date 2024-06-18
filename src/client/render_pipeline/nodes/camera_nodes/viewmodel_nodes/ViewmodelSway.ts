@@ -4,8 +4,6 @@ import ControlService from "client/services/ControlService";
 import { CameraNodeInputType } from "client/types/node_types/CameraNodeInputType";
 import { VectorSpring } from "shared/packages/Spring/Spring";
 
-const UserGameSettings = UserSettings().GetService("UserGameSettings");
-
 export class ViewmodelSway extends Node {
 	private vectorSping = new VectorSpring(0.2, 10, 100);
 	private lastMoveDirection = new Vector3();
@@ -13,7 +11,6 @@ export class ViewmodelSway extends Node {
 
 	PreUpdate(dt: number): void {
 		const mouseDelta = UserInputService.GetMouseDelta();
-		const mouseSensitivity = UserGameSettings.MouseSensitivity;
 
 		this.vectorSping.impulse(Vector3.xAxis.mul(mouseDelta.X * 0.05).add(Vector3.yAxis.mul(mouseDelta.Y * 0.05)));
 

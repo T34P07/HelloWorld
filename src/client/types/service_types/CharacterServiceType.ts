@@ -22,6 +22,7 @@ export type CharacterServiceType = {
 	bodyColors: BodyColors | undefined;
 	rootJoint: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
 	neck: { instance: Motor6D; c0: CFrame; c1: CFrame } | undefined;
+	viewmodel: Model | undefined;
 	rootAttach: Attachment | undefined;
 	noCharRaycastParams: RaycastParams;
 	noCharOverlapParams: OverlapParams;

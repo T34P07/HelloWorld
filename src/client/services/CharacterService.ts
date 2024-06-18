@@ -34,6 +34,7 @@ const CharacterService: CharacterServiceType = {
 	bodyColors: undefined,
 	neck: undefined,
 	rootAttach: undefined,
+	viewmodel: undefined,
 	noCharRaycastParams: new RaycastParams(),
 	noCharOverlapParams: new OverlapParams(),
 	animationTracks: {},
@@ -81,31 +82,37 @@ const CharacterService: CharacterServiceType = {
 		//	CharacterService.animationTracks[animation.Name] = CharacterService.animator.LoadAnimation(animation);
 		//});
 
-		const viewmodel = camera!.WaitForChild("Viewmodel") as Model;
-		CharacterService.bodyColors.Clone().Parent = viewmodel;
+		CharacterService.viewmodel = camera!.WaitForChild("Viewmodel") as Model;
+		CharacterService.bodyColors.Clone().Parent = CharacterService.viewmodel;
 
-		ContentProvider.PreloadAsync([CharacterService.char, viewmodel, Prefabs.Animations.Movement.Base]);
-		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char, viewmodel);
+		ContentProvider.PreloadAsync([
+			CharacterService.char,
+			CharacterService.viewmodel,
+			Prefabs.Animations.Movement.Base,
+		]);
+		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char, CharacterService.viewmodel);
 		CharacterService.characterAnimator.LoadAnimations(Prefabs.Animations.Movement.Base);
 	},
 	OnViewmodelUpdate: () => {
-		if (!CharacterService.char) return;
+		if (!CharacterService.char || !CharacterService.viewmodel) return;
 
 		const mode = camera!.GetAttribute("Mode");
 
-		CharacterService.char.GetDescendants().forEach((child) => {
-			if (child.IsA("BasePart") || child.IsA("Decal")) {
-				child.LocalTransparencyModifier = 1;
-
-				/*
-				child.LocalTransparencyModifier =
+		CharacterService.char.GetDescendants().forEach((descendant: Instance) => {
+			if (descendant.IsA("BasePart") || descendant.IsA("Decal")) {
+				descendant.LocalTransparencyModifier =
 					mode !== 0
 						? 0
-						: CharacterService.viewmodelParts.find((part) => part === child.Name) ||
-							  child.FindFirstAncestorWhichIsA("Tool")
-							? child.Transparency
+						: CharacterService.viewmodelParts.find((part) => part === descendant.Name) ||
+							  descendant.FindFirstAncestorWhichIsA("Tool")
+							? descendant.Transparency
 							: 1;
-			*/
+			}
+		});
+
+		CharacterService.viewmodel.GetDescendants().forEach((descendant: Instance) => {
+			if (descendant.IsA("BasePart") || descendant.IsA("Decal")) {
+				descendant.LocalTransparencyModifier = 1;
 			}
 		});
 	},
