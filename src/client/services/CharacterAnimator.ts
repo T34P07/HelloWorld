@@ -54,7 +54,7 @@ export class CharacterAnimator {
 			animationTracks.push(animationTrack);
 		});
 
-		if (this.pose === "Idle") this.PlayAnimation("Idle");
+		this.ReloadAnimations();
 	}
 
 	public UnloadAnimations(animations: Folder) {
@@ -73,7 +73,7 @@ export class CharacterAnimator {
 			}
 		}
 
-		if (this.pose === "Idle") this.PlayAnimation("Idle");
+		this.ReloadAnimations();
 	}
 
 	private GetAnimationTrack(animationTracks: AnimationTrack[]) {
@@ -151,6 +151,16 @@ export class CharacterAnimator {
 				});
 			}
 		}
+
+		this.pose = "";
+		this.lastPose = "";
+	}
+
+	private ReloadAnimations() {
+		const pose = this.pose;
+		this.StopAllAnimations();
+		this.pose = pose;
+		this.PlayAnimation(pose);
 	}
 
 	private UnloadAllAnimations() {

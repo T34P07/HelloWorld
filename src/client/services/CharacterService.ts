@@ -97,13 +97,15 @@ const CharacterService: CharacterServiceType = {
 		if (!CharacterService.char || !CharacterService.viewmodel) return;
 
 		const mode = camera!.GetAttribute("Mode");
+		const isViewmodelVisible = mode === 0 && CharacterService.char!.FindFirstChildWhichIsA("Tool") ? true : false;
 
 		CharacterService.char.GetDescendants().forEach((descendant: Instance) => {
 			if (descendant.IsA("BasePart") || descendant.IsA("Decal")) {
 				descendant.LocalTransparencyModifier =
 					mode !== 0
 						? 0
-						: CharacterService.viewmodelParts.find((part) => part === descendant.Name)
+						: !isViewmodelVisible &&
+							  CharacterService.viewmodelParts.find((part) => part === descendant.Name)
 							? descendant.Transparency
 							: 1;
 			}
@@ -111,9 +113,7 @@ const CharacterService: CharacterServiceType = {
 
 		CharacterService.viewmodel.GetDescendants().forEach((descendant: Instance) => {
 			if (descendant.IsA("BasePart") || descendant.IsA("Decal")) {
-				descendant.LocalTransparencyModifier = CharacterService.char!.FindFirstChild("Tool")
-					? descendant.Transparency
-					: 1;
+				descendant.LocalTransparencyModifier = isViewmodelVisible ? descendant.Transparency : 1;
 			}
 		});
 	},

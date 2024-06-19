@@ -75,7 +75,6 @@ const TagService: TagServiceType = {
 		TagService.TagHandlers[tag] = undefined;
 	},
 	Start: () => {
-		print("Starttt");
 		CollectionService.TagRemoved.Connect(TagService.OnTagRemoved);
 		CollectionService.TagAdded.Connect(TagService.OnTagAdded);
 

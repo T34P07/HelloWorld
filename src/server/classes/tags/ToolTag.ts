@@ -1,3 +1,4 @@
+import AttachToRig from "shared/utilities/AttachToRig";
 import { Tag } from "./Tag";
 
 export class ToolTag extends Tag {
@@ -5,33 +6,13 @@ export class ToolTag extends Tag {
 	protected class: string;
 	private rig;
 
-	AttachToRig() {
-		this.tool.GetDescendants().forEach((motor6D) => {
-			if (!motor6D.IsA("Motor6D") || !motor6D.HasTag("RigAttach")) return;
-
-			const RigPartName = motor6D.GetAttribute("CharacterPart") as string | undefined;
-			if (!RigPartName) return;
-
-			const RigPart = this.rig!.FindFirstChild(RigPartName) as BasePart;
-			if (!RigPart) return;
-
-			motor6D.Part0 = motor6D.Part0 !== undefined ? motor6D.Part0 : RigPart;
-			motor6D.Part1 = motor6D.Part1 !== undefined ? motor6D.Part1 : RigPart;
-			motor6D.C0 = motor6D.GetAttribute("CharacterC0") as CFrame;
-			motor6D.C1 = motor6D.GetAttribute("CharacterC1") as CFrame;
-		});
-	}
-
 	constructor(tool: Tool, toolclass: string) {
 		super();
 		this.tool = tool;
 		this.class = toolclass;
-		this.rig = this.tool.Parent;
-		this.AttachToRig();
-		print("attach to rig", tool);
+		this.rig = this.tool.Parent as Model;
+		AttachToRig(this.tool, this.rig, "Character");
 	}
 
-	Destroy() {
-		print("remove tool", this.tool);
-	}
+	Destroy() {}
 }
