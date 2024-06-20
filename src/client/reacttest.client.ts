@@ -75,15 +75,9 @@ const Panel2 = () => {
 		},
 	);
 };
-//
-//let a = false;
-//
-//while (task.wait(1)) {
-//	a = !a;
-//
-//	root.render(
-//		React.createElement(MainFrame, {
-//			Content: a ? Panel1() : Panel2(),
-//		}),
-//	);
-//}
+
+root.render(
+	React.createElement(MainFrame, {
+		Content: Panel1(),
+	}),
+);

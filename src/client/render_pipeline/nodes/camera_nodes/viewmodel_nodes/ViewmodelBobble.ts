@@ -2,6 +2,7 @@ import { Players, RunService } from "@rbxts/services";
 import { Node } from "client/render_pipeline/Node";
 import { CameraNodeInputType } from "client/types/node_types/CameraNodeInputType";
 
+const Vector3XZ = new Vector3(1, 0, 1);
 export class ViewmodelBobble extends Node {
 	private bobble = new CFrame();
 	private time = 0;
@@ -13,7 +14,7 @@ export class ViewmodelBobble extends Node {
 		const character = localPlayer.Character;
 		if (!character || !character.PrimaryPart) return;
 
-		const speed = character.PrimaryPart.AssemblyLinearVelocity.Magnitude;
+		const speed = character.PrimaryPart.AssemblyLinearVelocity.mul(Vector3XZ).Magnitude;
 		const swayMultiplier = speed * 0.1;
 
 		this.time += dt * speed * 0.1;
