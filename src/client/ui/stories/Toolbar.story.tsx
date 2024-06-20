@@ -24,6 +24,5 @@ export = (target: UIBase) => {
 	const root = ReactRoblox.createRoot(handle);
 
 	root.render(React.createElement(Toast));
-
 	return () => root.unmount();
 };

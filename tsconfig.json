@@ -10,12 +10,18 @@
         "moduleResolution": "Node",
         "noLib": true,
         "resolveJsonModule": true,
-        "experimentalDecorators": false,
+        "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "moduleDetection": "force",
         "strict": true,
         "target": "ESNext",
         "typeRoots": ["node_modules/@rbxts"],
+        "types": ["types/plugin"],
+        "plugins": [
+            {
+                "transform": "rbxts-transformer-t-new",
+            }
+        ],
 
         // configurable
         "rootDir": "src",
