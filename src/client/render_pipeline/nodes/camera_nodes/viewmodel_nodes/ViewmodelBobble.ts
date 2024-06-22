@@ -7,7 +7,7 @@ export class ViewmodelBobble extends Node {
 	private bobble = new CFrame();
 	private time = 0;
 	private frequency = 2;
-	private amplitude = 0.75;
+	private amplitude = 0.25;
 
 	PreUpdate(dt: number): void {
 		const localPlayer = Players.LocalPlayer;

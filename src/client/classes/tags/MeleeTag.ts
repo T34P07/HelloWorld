@@ -27,34 +27,42 @@ export class MeleeTag extends WeaponTag {
 	}
 
 	private Attack() {
-		const animationTrack = this.actionAnimator!.GetAnimationTrack(`Attack`);
-		if (!animationTrack) return;
+		print("try to attack");
+		
+		for (let index = 0; index < 2; index++) {
+			this.actionAnimator!.PlayAnimation(`Attack${index}`, .1);
+			task.wait(1);
+		}
+
+
+		//const animationTrack = this.actionAnimator!.GetAnimationTrack(`Attack`);
+		//if (!animationTrack) return;
 
 		this.humanoidsHit = [];
 
 		const trove = new Trove();
 
-		trove.add(
-			animationTrack.GetMarkerReachedSignal("Hit").Connect((state?: string) => {
-				if (!state) return;
+		//trove.add(
+		//	animationTrack.GetMarkerReachedSignal("Hit").Connect((state?: string) => {
+		//		if (!state) return;
+//
+		//		if (state === "Began") {
+		//			trove.add(
+		//				RunService.Heartbeat.Connect((dt: number) => {
+		//					this.DetectHit(dt);
+		//				}),
+		//			);
+		//		} else {
+		//			if (trove) trove.destroy();
+		//		}
+		//	}),
+		//);
 
-				if (state === "Began") {
-					trove.add(
-						RunService.Heartbeat.Connect((dt: number) => {
-							this.DetectHit(dt);
-						}),
-					);
-				} else {
-					if (trove) trove.destroy();
-				}
-			}),
-		);
+		//animationTrack.Ended.Once(() => {
+		//	if (trove) trove.destroy();
+		//});
 
-		animationTrack.Ended.Once(() => {
-			if (trove) trove.destroy();
-		});
-
-		animationTrack.Play(0.25);
+	//	animationTrack.Play(0.25);
 	}
 
 	protected Equipped(): boolean {

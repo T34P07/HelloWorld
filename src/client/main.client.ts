@@ -14,4 +14,4 @@ CameraService.Start();
 ControlService.Start();
 TagService.Start();
 PlayerGuiService.Start();
-GameRouter.Start();
+//GameRouter.Start();

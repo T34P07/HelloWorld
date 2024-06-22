@@ -20,7 +20,7 @@ export class CharacterAnimator {
 	};
 	private pose = "Idle";
 	private lastPose: string = "";
-	private transitionTime: number = 0.2;
+	private fadeTime: number = 0.2;
 	private lastJump: number = 0;
 	private jumpVar: number = 1;
 	private lastUpdate: number = 0;
@@ -98,9 +98,9 @@ export class CharacterAnimator {
 		}
 	}
 
-	private PlayAnimation(name: string, transitionTime: number = this.transitionTime) {
+	private PlayAnimation(name: string, fadeTime: number = this.fadeTime) {
 		if (name === this.lastPose) return;
-		this.StopAnimation(this.lastPose, transitionTime);
+		this.StopAnimation(this.lastPose, fadeTime);
 		this.lastPose = name;
 
 		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
@@ -110,11 +110,11 @@ export class CharacterAnimator {
 			const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
 			if (!animationTrack) continue;
 
-			animationTrack.Play(transitionTime);
+			animationTrack.Play(fadeTime);
 		}
 	}
 
-	private StopAnimation(name: string, transitionTime?: number) {
+	private StopAnimation(name: string, fadeTime?: number) {
 		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
 			const animationTracks = groupAnimationsTracks.get(name);
 			if (!animationTracks) {
@@ -124,7 +124,7 @@ export class CharacterAnimator {
 			const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
 			if (!animationTrack) continue;
 
-			animationTrack.Stop(transitionTime);
+			animationTrack.Stop(fadeTime);
 		}
 	}
 
@@ -192,7 +192,7 @@ export class CharacterAnimator {
 
 	private OnJumping() {
 		const now = os.clock();
-		if (!this.humanoid || now - this.lastJump <= this.transitionTime) return;
+		if (!this.humanoid || now - this.lastJump <= this.fadeTime) return;
 		this.lastJump = now;
 
 		let jumpAnim = this.humanoid.GetAttribute("JumpAnim") as string;

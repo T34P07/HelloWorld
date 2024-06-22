@@ -41,11 +41,11 @@ export class ToolTag extends Tag {
 
 		if (baseAnimations && CharacterService.characterAnimator)
 			CharacterService.characterAnimator.LoadAnimations(baseAnimations);
-		//
-		//if (actionAnimations && CharacterService.animator) {
-		//	this.actionAnimator = new ActionAnimator(CharacterService.animator);
-		//	this.actionAnimator.LoadAnimations(actionAnimations);
-		//}
+		
+		if (actionAnimations && CharacterService.animator) {
+			this.actionAnimator = new ActionAnimator(CharacterService.char as Model, CameraService.viewmodel);
+			this.actionAnimator.LoadAnimations(actionAnimations);
+		}
 	}
 
 	private UnloadAnimations() {

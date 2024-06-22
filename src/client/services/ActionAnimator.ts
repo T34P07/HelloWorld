@@ -1,38 +1,73 @@
-type Animations = Map<string, AnimationTrack[]>;
+type AnimationTracks = {
+	character: Map<string, AnimationTrack[]>;
+	viewmodel: Map<string, AnimationTrack[]>;
+};
+
+type Rigs = {
+	character: Model | undefined;
+	viewmodel: Model | undefined;
+};
+
+type RigName = "viewmodel" | "character";
 
 export class ActionAnimator {
-	private animations: Animations = new Map();
-	private animator: Animator;
+	private rigs: Rigs = {
+		character: undefined,
+		viewmodel: undefined,
+	};
+	
+	private fadeTime = 0.1;
 
-	public LoadAnimations(animationsFolder: Folder) {
-		animationsFolder.GetDescendants().forEach((animation) => {
+	private animationTracks: AnimationTracks = {
+		character: new Map<string, AnimationTrack[]>(),
+		viewmodel: new Map<string, AnimationTrack[]>(),
+	};
+
+	public LoadAnimations(animations: Folder) {
+		animations.GetDescendants().forEach((animation) => {
 			if (!animation.IsA("Animation")) return;
 
-			const animationTracks = this.animations.get(animation.Name) ?? [];
-			const animationTrack = this.animator.LoadAnimation(animation);
+			const groupName = animation.Parent!.Name.lower() as RigName;
+			const groupAnimationTracks = this.animationTracks[groupName];
+
+			const rig = this.rigs[groupName];
+			if (!rig) return;
+
+			const animator = rig.FindFirstChildWhichIsA("Animator", true);
+			if (!animator) return;
+
+			let animationTracks = groupAnimationTracks.get(animation.Name);
+			animationTracks = animationTracks ? animationTracks : [];
+			groupAnimationTracks.set(animation.Name, animationTracks);
+
+			const animationTrack = animator.LoadAnimation(animation);
 			const weight = animation.GetAttribute("Weight") as number;
 
 			if (weight) animationTrack.AdjustWeight(weight);
-
 			animationTracks.push(animationTrack);
-
-			this.animations.set(animation.Name, animationTracks);
 		});
 	}
 
-	public UnloadAnimations(fadeTime: number = 0) {
-		this.animations.forEach((animationTracks) => {
-			animationTracks.forEach((animationTrack) => {
-				animationTrack.Stop(fadeTime);
-			});
-		});
+	public UnloadAnimations(fadeTime: number = this.fadeTime) {
+		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			for (const animationPairs of pairs(groupAnimationsTracks)) {
+				const [_, animationTracks] = animationPairs;
+
+				animationTracks.forEach((animationTrack, index) => {
+					if (animationTrack.Animation) {
+						animationTrack.Stop();
+						animationTracks.remove(index);
+					}
+
+					return;
+				});
+			}
+		}
 	}
 
-	public GetAnimationTrack(animationName: string) {
-		const animationTracks = this.animations.get(animationName);
-		if (!animationTracks) return;
-
+	private ChooseAnimationTrack(animationTracks: AnimationTrack[]) {
 		let lastWeight = 0;
+
 		let randomAnimationTracks: AnimationTrack[] = [];
 
 		animationTracks.forEach((animationTrack) => {
@@ -52,18 +87,50 @@ export class ActionAnimator {
 		}
 	}
 
-	public PlayAnimation(animationName: string, fadeTime: number = 0) {
-		const animationTrack = this.GetAnimationTrack(animationName);
-		if (!animationTrack) return;
+	public GetAnimationTrack(name: string) {
+		
 
-		animationTrack.Play(fadeTime);
-		return animationTrack;
+		for (const [groupName, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			const animationTracks = groupAnimationsTracks.get(name);
+			if (!animationTracks) continue;
+
+			const animationTrack = this.ChooseAnimationTrack(animationTracks) as AnimationTrack;
+			if (!animationTrack) continue;
+			
+		}
 	}
 
-	public StopAnimation() {}
+	public PlayAnimation(name: string, fadeTime: number = this.fadeTime) {
+		for (const [groupName, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			const animationTracks = groupAnimationsTracks.get(name);
+			if (!animationTracks) continue;
 
-	constructor(animator: Animator) {
-		this.animator = animator;
+			const animationTrack = this.ChooseAnimationTrack(animationTracks) as AnimationTrack;
+			if (!animationTrack) continue;
+
+			animationTrack.Play(fadeTime);
+		}
+	}
+
+	public StopAnimation(name: string, fadeTime?: number) {
+		for (const [_, groupAnimationsTracks] of pairs(this.animationTracks)) {
+			const animationTracks = groupAnimationsTracks.get(name);
+			if (!animationTracks) {
+				continue;
+			}
+
+			const animationTrack = this.ChooseAnimationTrack(animationTracks) as AnimationTrack;
+			if (!animationTrack) continue;
+
+			animationTrack.Stop(fadeTime);
+		}
+	}
+
+	constructor(character: Model, viewmodel?: Model | undefined ) {
+		this.rigs = {
+			character: character,
+			viewmodel: viewmodel,
+		};
 	}
 
 	public Destroy(fadeTime: number = 0) {
