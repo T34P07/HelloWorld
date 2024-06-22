@@ -8,6 +8,9 @@ import { deepCopy } from "@rbxts/deepcopy";
 import { CharacterAnimator } from "./CharacterAnimator";
 import { ContentProvider, Players, RunService, Workspace } from "@rbxts/services";
 import RunConfig from "client/config/RunConfig";
+import { Dash } from "client/classes/abilities/Dash";
+import ControlService from "./ControlService";
+import InputService from "./InputService";
 
 const localPlayer = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
@@ -15,6 +18,7 @@ const camera = Workspace.CurrentCamera;
 export type action = string | undefined;
 
 const CharacterService: CharacterServiceType = {
+	dash: undefined,
 	characterAnimator: undefined,
 	action: undefined,
 	autoRotate: true,
@@ -92,6 +96,8 @@ const CharacterService: CharacterServiceType = {
 		]);
 		CharacterService.characterAnimator = new CharacterAnimator(CharacterService.char, CharacterService.viewmodel);
 		CharacterService.characterAnimator.LoadAnimations(Prefabs.Animations.Movement.Base);
+
+		CharacterService.dash = new Dash(CharacterService);
 	},
 	OnViewmodelUpdate: () => {
 		if (!CharacterService.char || !CharacterService.viewmodel) return;
@@ -137,6 +143,15 @@ const CharacterService: CharacterServiceType = {
 
 		RunService.BindToRenderStep("CharacterUpdate", Enum.RenderPriority.Character.Value, CharacterService.Update);
 		RunService.PreRender.Connect(CharacterService.OnViewmodelUpdate);
+
+		ControlService.Start(CharacterService);
+		InputService.BindAction("Dash").Connect(
+			(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {
+				if (userInputState !== Enum.UserInputState.Begin) return;
+
+				CharacterService.dash?.Start();
+			},
+		);
 	},
 	Update: (dt) => {
 		if (!CharacterService.hrp || !CharacterService.rootJoint) return;

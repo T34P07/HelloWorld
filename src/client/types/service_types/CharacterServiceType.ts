@@ -1,9 +1,11 @@
+import { Dash } from "client/classes/abilities/Dash";
 import { RenderPipeline } from "client/render_pipeline/RenderPipeline";
 import { CharacterAnimator } from "client/services/CharacterAnimator";
 
 export type CharacterActionType = string | undefined;
 
 export type CharacterServiceType = {
+	dash: Dash | undefined,
 	characterAnimator: CharacterAnimator | undefined;
 	action: CharacterActionType;
 	autoRotate: boolean;

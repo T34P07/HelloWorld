@@ -136,7 +136,7 @@ export class CharacterAnimator {
 				const animationTrack = this.GetAnimationTrack(animationTracks) as AnimationTrack;
 				if (!animationTrack) continue;
 
-				animationTrack.AdjustSpeed(speed);
+			//	animationTrack.AdjustSpeed(speed);
 			}
 		}
 	}

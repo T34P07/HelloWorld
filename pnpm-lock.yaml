@@ -20,6 +20,9 @@ importers:
       '@rbxts/lapis':
         specifier: ^0.3.0
         version: 0.3.0(@rbxts/t@3.1.1)
+      '@rbxts/net':
+        specifier: ^3.0.9
+        version: 3.0.9
       '@rbxts/pretty-react-hooks':
         specifier: ^0.5.1
         version: 0.5.1
@@ -79,7 +82,7 @@ importers:
         specifier: 2.3.0-dev-d7847ea
         version: 2.3.0-dev-d7847ea
       typescript:
-        specifier: ^5.4.5
+        specifier: ^5.5.2
         version: 5.5.2
 
 packages:
@@ -154,6 +157,9 @@ packages:
     peerDependencies:
       '@rbxts/t': '*'
 
+  '@rbxts/net@3.0.9':
+    resolution: {integrity: sha512-m6leMsZo/Z482tV6ZJBY4qe5FSoksu4MFpCeZJ9fDeF1lsDn33p9cNY6tVbXEoo27LaOucOKCT1/Hu1FdZv6Kw==}
+
   '@rbxts/pretty-react-hooks@0.5.1':
     resolution: {integrity: sha512-0JreWizUKryJGhU34PnK5XQNQkD1odgW3ZXri3SBGbMs0mtS+Icb7eJKJ0ul+4k4u4FEO/gKRPo5SWFP+XJ3xA==}
 
@@ -214,11 +220,11 @@ packages:
   '@types/jsonfile@6.1.4':
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
 
-  '@types/mocha@10.0.6':
-    resolution: {integrity: sha512-dJvrYWxP/UcXm36Qn36fxhUKu8A/xMRXVT2cliFF1Z7UA9liG5Psj3ezNSZw+5puH2czDXRLcXQxf8JbJt0ejg==}
+  '@types/mocha@10.0.7':
+    resolution: {integrity: sha512-GN8yJ1mNTcFcah/wKEFIJckJx9iJLoMSzWcfRRuxz/Jk+U6KQNnml+etbtxFK8lPjzOw3zp4Ha/kjSst9fsHYw==}
 
-  '@types/node@20.14.7':
-    resolution: {integrity: sha512-uTr2m2IbJJucF3KUxgnGOZvYbN0QgkGyWxG6973HCpMYFy2KfcgYuIwkJQMQkt1VbBMlvWRbpshFTLxnxCZjKQ==}
+  '@types/node@20.14.8':
+    resolution: {integrity: sha512-DO+2/jZinXfROG7j7WKFn/3C6nFwxy2lLpgLjEXJz+0XKphZlTLJ14mo8Vfg8X5BWN6XjyESXq+LcYdT7tR3bA==}
 
   '@types/prompts@2.4.9':
     resolution: {integrity: sha512-qTxFi6Buiu8+50/+3DGIWLHM6QuWsEKugJnnP6iv2Mc4ncxE4A/OJkjuVOA+5X0X1S/nq5VJRa8Lu+nwcvbrKA==}
@@ -972,6 +978,8 @@ snapshots:
     dependencies:
       '@rbxts/t': 3.1.1
 
+  '@rbxts/net@3.0.9': {}
+
   '@rbxts/pretty-react-hooks@0.5.1':
     dependencies:
       '@rbxts/flipper': 2.0.1
@@ -1029,23 +1037,23 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 20.14.7
+      '@types/node': 20.14.8
 
   '@types/json-schema@7.0.15': {}
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 20.14.7
+      '@types/node': 20.14.8
 
-  '@types/mocha@10.0.6': {}
+  '@types/mocha@10.0.7': {}
 
-  '@types/node@20.14.7':
+  '@types/node@20.14.8':
     dependencies:
       undici-types: 5.26.5
 
   '@types/prompts@2.4.9':
     dependencies:
-      '@types/node': 20.14.7
+      '@types/node': 20.14.8
       kleur: 3.0.3
 
   '@types/resolve@1.20.6': {}
@@ -1310,7 +1318,7 @@ snapshots:
 
   eslint-plugin-roblox-ts@0.0.36(eslint@9.5.0):
     dependencies:
-      '@types/node': 20.14.7
+      '@types/node': 20.14.8
       '@typescript-eslint/experimental-utils': 5.62.0(eslint@9.5.0)(typescript@5.5.2)
       typescript: 5.5.2
     transitivePeerDependencies:
@@ -1628,8 +1636,8 @@ snapshots:
       '@roblox-ts/path-translator': 1.0.0
       '@roblox-ts/rojo-resolver': 1.0.6
       '@types/fs-extra': 11.0.4
-      '@types/mocha': 10.0.6
-      '@types/node': 20.14.7
+      '@types/mocha': 10.0.7
+      '@types/node': 20.14.8
       '@types/prompts': 2.4.9
       '@types/resolve': 1.20.6
       '@types/ts-expose-internals': ts-expose-internals@5.3.3

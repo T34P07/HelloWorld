@@ -1,17 +1,18 @@
 import { ContextActionService, RunService, UserInputService } from "@rbxts/services";
 import InputService from "client/services/InputService";
-import CharacterService from "./CharacterService";
+import { CharacterServiceType } from "client/types/service_types/CharacterServiceType";
 
 let lastGrounded = 0;
 
 const ControlService = {
+	characterService: undefined as CharacterServiceType | undefined,
 	worldMoveDirection: Vector3.zero,
 	moveDirection: Vector3.zero,
 	AddController: (character: Model) => {},
 	Update: (dt: number) => {
-		if (!CharacterService.hrp || !CharacterService.hum) return;
-		const hrpCF = CharacterService.hrp.CFrame;
-		const isGrounded = CharacterService.hum.FloorMaterial !== Enum.Material.Air;
+		if (!ControlService.characterService || !ControlService.characterService.hrp || !ControlService.characterService.hum) return;
+		const hrpCF = ControlService.characterService.hrp.CFrame;
+		const isGrounded = ControlService.characterService.hum.FloorMaterial !== Enum.Material.Air;
 
 		ControlService.moveDirection = new Vector3(
 			(InputService.IsInputActive("MoveRight") ? 1 : 0) - (InputService.IsInputActive("MoveLeft") ? 1 : 0),
@@ -31,14 +32,15 @@ const ControlService = {
 
 		if (!isGrounded && worldMoveDirection === Vector3.zero) worldMoveDirection = ControlService.worldMoveDirection;
 
-		CharacterService.hum.Move(ControlService.worldMoveDirection.Lerp(worldMoveDirection, 10 * dt));
+		ControlService.characterService.hum.Move(ControlService.worldMoveDirection.Lerp(worldMoveDirection, 10 * dt));
 		ControlService.worldMoveDirection = worldMoveDirection;
 
 		if (isGrounded && InputService.IsInputActive("Jump")) {
-			CharacterService.hum.Jump = true;
+			ControlService.characterService.hum.Jump = true;
 		}
 	},
-	Start: () => {
+	Start: (characterService: CharacterServiceType) => {
+		ControlService.characterService = characterService;
 		RunService.Heartbeat.Connect(ControlService.Update);
 	},
 };
