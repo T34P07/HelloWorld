@@ -1,4 +1,5 @@
 import { Trove } from "@rbxts/trove";
+import { DashTag } from "client/classes/tags/DashTag";
 import { KatanaTag } from "client/classes/tags/KatanaTag";
 import { MeleeTag } from "client/classes/tags/MeleeTag";
 import { Tag } from "client/classes/tags/Tag";
@@ -19,6 +20,7 @@ export type TagClassesType = {
 	WeaponTag: typeof WeaponTag;
 	MeleeTag: typeof MeleeTag;
 	KatanaTag: typeof KatanaTag;
+	DashTag: typeof DashTag;
 };
 
 export type TagServiceType = {

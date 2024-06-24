@@ -1,3 +1,4 @@
+import { DashTag } from './../classes/tags/DashTag';
 import { CollectionService, StarterPlayer } from "@rbxts/services";
 import { Tag } from "client/classes/tags/Tag";
 
@@ -20,6 +21,7 @@ const TagService: TagServiceType = {
 		WeaponTag: WeaponTag,
 		MeleeTag: MeleeTag,
 		KatanaTag: KatanaTag,
+		DashTag: DashTag
 	},
 	tagHandlers: {},
 	OnInstanceAdded: (tag, instance, tagHandler) => {

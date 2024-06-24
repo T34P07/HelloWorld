@@ -6,10 +6,10 @@ import PlayerGuiService from "./services/PlayerGuiService";
 import ToastStory from "./ui/stories/TestStory.story";
 import GameRouter from "./ui/stories/GameRouter";
 
+CameraService.Start();
 CharacterService.PreStart();
 InputService.Start();
 CharacterService.Start();
-CameraService.Start();
 TagService.Start();
 PlayerGuiService.Start();
 //GameRouter.Start();

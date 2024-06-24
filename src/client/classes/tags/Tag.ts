@@ -2,9 +2,9 @@ export class Tag {
 	protected class: string;
 	protected instance: Instance;
 
-	constructor(instance: Instance, toolclass: string) {
+	constructor(instance: Instance, tagClass: string) {
 		this.instance = instance;
-		this.class = toolclass;
+		this.class = tagClass;
 	}
 	Destroy() {}
 }

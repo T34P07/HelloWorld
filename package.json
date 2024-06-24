@@ -37,6 +37,7 @@
     "@rbxts/remo": "^1.4.0",
     "@rbxts/ripple": "^0.8.1",
     "@rbxts/services": "^1.5.4",
+    "@rbxts/timer": "^0.0.9",
     "@rbxts/trove": "^1.3.0"
   }
 }
