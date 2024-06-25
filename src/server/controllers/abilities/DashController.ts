@@ -8,7 +8,7 @@ const DashController = {
 
            character.AddTag("Dash");
 
-           task.delay(.5, () => {
+           task.delay(.3, () => {
             character.RemoveTag("Dash");
            })
        });

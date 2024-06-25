@@ -1,6 +1,21 @@
 export class Ability
 {
     constructor() {}
-    Start() {}
+
+    SetCooldown()
+    {
+
+    }
+
+    IsOnCooldown()
+    {
+
+    }
+
+    Start() {
+
+        return true;
+    }
+
     Stop() {}
 }
