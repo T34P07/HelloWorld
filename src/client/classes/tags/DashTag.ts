@@ -3,6 +3,7 @@ import { Tag } from "./Tag";
 import { Trove } from "@rbxts/trove";
 import RemoveAllTags from "shared/utilities/RemoveAllTags";
 import { Timer } from "@rbxts/timer";
+import SoundManager from "client/services/SoundManagerr";
 
 const tweenInfo = new TweenInfo(.15);
 
@@ -13,6 +14,7 @@ export class DashTag extends Tag {
     constructor(instance: Instance, tagClass: string) {
         super(instance, tagClass);
         this.instance.Archivable = true;
+        SoundManager.PlaySound("Dash", instance);
 
         this.timer = new Timer(.01);
         this.trove.add(this.timer);

@@ -17,7 +17,8 @@ export class Dash extends Ability {
 
         this.linearVelocity = new Instance("LinearVelocity");
         this.linearVelocity.Enabled = false;
-        this.linearVelocity.MaxForce = 1e5;
+        this.linearVelocity.ForceLimitMode = Enum.ForceLimitMode.PerAxis;
+        this.linearVelocity.MaxAxesForce = new Vector3(1e8, 5e3, 1e8);
         this.linearVelocity.Attachment0 = characterService.rootAttach;
         this.linearVelocity.Parent = characterService.hrp;
     }
@@ -25,9 +26,10 @@ export class Dash extends Ability {
     public Start()
     {
         if (!super.Start()) return false;
+        this.SetCooldown(DashConfig.Cooldown);
 
         const camCF = camera.CFrame;
-        this.linearVelocity.VectorVelocity = camCF.LookVector.mul(150);
+        this.linearVelocity.VectorVelocity = camCF.LookVector.mul(DashConfig.VelocityFactor);
         this.linearVelocity.Enabled = true;
         Events.Character.Ability.Dash.SendToServer();
 

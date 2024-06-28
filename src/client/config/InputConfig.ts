@@ -8,7 +8,7 @@ const InputConfig: InputConfigType = {
 	MoveRight: Enum.KeyCode.D,
 	MoveLeft: Enum.KeyCode.A,
 	Jump: Enum.KeyCode.Space,
-	Dash: Enum.KeyCode.LeftShift,
+	Dash: Enum.KeyCode.Q,
 	Attack: Enum.UserInputType.MouseButton1,
 };
 

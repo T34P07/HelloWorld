@@ -1,4 +1,5 @@
 export type DashConfigType = {
     Cooldown: number,
-    Duration: number
+    Duration: number,
+    VelocityFactor: number
 }
