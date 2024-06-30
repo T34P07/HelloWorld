@@ -1,15 +1,19 @@
 import InputService from "client/services/InputService";
 import { WeaponTag } from "./WeaponTag";
-import { Trove } from "@rbxts/trove";
-import { RunService, Workspace } from "@rbxts/services";
+import { Workspace } from "@rbxts/services";
 import CharacterService from "client/services/CharacterService";
+import Events from "client/modules/Events";
 
 export class MeleeTag extends WeaponTag {
 	private collider: BasePart | undefined;
-	private humanoidsHit: Humanoid[] = [];
+	private combo = 1;
+	private inputQueued = 0;
+	private action = "None";
+	private comboTrove = this.actionTrove.extend();
 
-	private DetectHit(dt: number) {
-		if (!this.collider) return;
+	private DetectHit(animationName: string) {
+		this.collider = this.viewmodelTool!.FindFirstChild("Colliders")!.FindFirstChild(animationName, true) as Part;
+		const humanoidsHit = [] as Humanoid[];
 
 		const parts = Workspace.GetPartsInPart(this.collider, CharacterService.noCharOverlapParams);
 
@@ -18,65 +22,93 @@ export class MeleeTag extends WeaponTag {
 				instance.Parent!.Parent!.FindFirstChild("Humanoid")) as Humanoid;
 			if (!humanoid) return;
 
-			if (!this.humanoidsHit.includes(humanoid)) {
-				this.humanoidsHit.push(humanoid);
+			if (!humanoidsHit.includes(humanoid)) {
+				humanoidsHit.push(humanoid);
 			}
 		});
 
-		this.collider.Color = parts.size() > 0 ? new Color3(0, 1, 0) : new Color3(1, 0, 0);
+		Events.Weapons.Damage.Deal.SendToServer(humanoidsHit);
 	}
 
-	private Attack() {
-		print("try to attack");
-		
-		for (let index = 0; index < 2; index++) {
-			this.actionAnimator!.PlayAnimation(`Attack${index}`, .1);
-			task.wait(1);
+	private ProceedCombo() {
+		this.inputQueued = 0;
+
+		const animationName = `Attack${this.combo}`;
+
+		const groupAnimationTracks = this.actionAnimator!.GetGroupAnimationTracks(animationName);
+		if (!groupAnimationTracks.viewmodel) return false;
+
+		let endConnection: RBXScriptConnection | undefined = undefined;
+
+		this.comboTrove.add(groupAnimationTracks.viewmodel.GetMarkerReachedSignal("Meta").Once(() => {
+			if (os.clock() - this.inputQueued < .5) {
+				this.combo++;
+				if (this.ProceedCombo())
+					if (endConnection)
+						endConnection.Disconnect();
+				this.actionAnimator!.StopAnimation(animationName);
+			}
+		}));
+
+		this.comboTrove.add(groupAnimationTracks.viewmodel.GetMarkerReachedSignal("Hit").Once(() => {
+			this.DetectHit(animationName);
+		}));
+
+		endConnection = groupAnimationTracks.viewmodel.Ended.Once(() => {
+			this.action = "None";
+			this.comboTrove.clean();
+		});
+		this.comboTrove.add(endConnection);
+
+		this.actionAnimator!.PlayAnimation(animationName, .1, 1.5);
+		return true;
+	};
+
+	protected StopCombo() {
+		this.comboTrove.clean();
+		for (let index = 1; index <= this.combo; index++) {
+			this.actionAnimator!.StopAnimation(`Attack${this.combo}`, 0);
 		}
-
-
-		//const animationTrack = this.actionAnimator!.GetAnimationTrack(`Attack`);
-		//if (!animationTrack) return;
-
-		this.humanoidsHit = [];
-
-		const trove = new Trove();
-
-		//trove.add(
-		//	animationTrack.GetMarkerReachedSignal("Hit").Connect((state?: string) => {
-		//		if (!state) return;
-//
-		//		if (state === "Began") {
-		//			trove.add(
-		//				RunService.Heartbeat.Connect((dt: number) => {
-		//					this.DetectHit(dt);
-		//				}),
-		//			);
-		//		} else {
-		//			if (trove) trove.destroy();
-		//		}
-		//	}),
-		//);
-
-		//animationTrack.Ended.Once(() => {
-		//	if (trove) trove.destroy();
-		//});
-
-	//	animationTrack.Play(0.25);
+		return true;
 	}
+
+	protected Attack() {
+		if (this.action !== "None") return;
+		this.action = "Attack";
+
+		this.combo = 1;
+		this.ProceedCombo();
+	};
+
+	protected Block(userInputState: Enum.UserInputState) {
+		if (userInputState === Enum.UserInputState.Begin) {
+			if (this.action !== "None" && (this.action !== "Attack" || !this.StopCombo()))
+				return;
+
+			this.action = "Block";
+			this.actionAnimator!.PlayAnimation("Block", .15);
+		}
+		else if (this.action === "Block" && userInputState === Enum.UserInputState.End) {
+			this.actionAnimator!.StopAnimation("Block", .15);
+			this.action = "None";
+		}
+	};
 
 	protected Equipped(): boolean {
 		if (!super.Equipped()) return false;
 
-		this.actionTrove.add(
-			InputService.BindAction("Attack").Connect(
-				(actionName: string, userInputState: Enum.UserInputState, inputObject: InputObject) => {
-					if (userInputState !== Enum.UserInputState.Begin) return;
+		this.actionTrove.connect(InputService.BindAction("Attack"), (_, userInputState: Enum.UserInputState) => {
+			if (userInputState !== Enum.UserInputState.Begin) return;
 
-					this.Attack();
-				},
-			),
-		);
+			this.inputQueued = os.clock();
+			this.Attack();
+		});
+
+		this.actionTrove.connect(InputService.BindAction("Block"), (_, userInputState: Enum.UserInputState) => {
+			this.Block(userInputState);
+		});
+
+		this.action = "None";
 
 		return true;
 	}
@@ -87,8 +119,7 @@ export class MeleeTag extends WeaponTag {
 
 	constructor(instance: Instance, toolclass: string) {
 		super(instance, toolclass);
-		this.collider = this.instance.FindFirstChild("Collider", true) as BasePart;
-	}
+	};
 
 	Destroy() {
 		super.Destroy();

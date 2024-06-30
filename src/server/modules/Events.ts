@@ -4,6 +4,11 @@ const Events = {
     Character: {
         Ability: {
             Dash: Remotes.Server.Get("CharacterAbilityDash")
+        },
+    },
+    Weapons: {
+        Damage: {
+            Deal: Remotes.Server.Get("WeaponsDamageDeal")
         }
     }
 }

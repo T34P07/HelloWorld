@@ -5,6 +5,18 @@ export class WeaponTag extends ToolTag {
 		super(instance, toolclass);
 	}
 
+	protected Attack() { }
+
+	protected Equipped(): boolean {
+		if (!super.Equipped()) return false;
+
+		return true;
+	}
+
+	protected Unequipped(): void {
+		super.Unequipped();
+	}
+
 	Destroy() {
 		super.Destroy();
 	}

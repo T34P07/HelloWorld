@@ -1,13 +1,12 @@
 import { DashTag } from './../classes/tags/DashTag';
-import { CollectionService, StarterPlayer } from "@rbxts/services";
+import { CollectionService } from "@rbxts/services";
 import { Tag } from "client/classes/tags/Tag";
 
 import Prefabs from "../../shared/libraries/Prefabs";
 import {
 	TagServiceType,
-	TagClassModuleExportsType,
-	TagConstructorType,
 	TagClassesType,
+	TagHandlerType,
 } from "client/types/service_types/TagServiceType";
 import { ToolTag } from "client/classes/tags/ToolTag";
 import { WeaponTag } from "client/classes/tags/WeaponTag";
@@ -24,6 +23,12 @@ const TagService: TagServiceType = {
 		DashTag: DashTag
 	},
 	tagHandlers: {},
+	GetTagInstance: (tag, instance: Instance) => {
+		const tagHandler = TagService.tagHandlers[tag] as TagHandlerType;
+		const tagInstance = tagHandler.instances.get(instance);
+
+		return tagInstance;
+	},
 	OnInstanceAdded: (tag, instance, tagHandler) => {
 		if (instance.IsDescendantOf(Prefabs)) return;
 
@@ -54,17 +59,13 @@ const TagService: TagServiceType = {
 
 		TagService.tagHandlers[tag] = tagHandler;
 
-		trove.add(
-			CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => {
-				TagService.OnInstanceRemoved(tag, instance, tagHandler);
-			}),
-		);
+		trove.connect(CollectionService.GetInstanceRemovedSignal(tag), (instance) => {
+			TagService.OnInstanceRemoved(tag, instance, tagHandler);
+		});
 
-		trove.add(
-			CollectionService.GetInstanceAddedSignal(tag).Connect((instance) => {
-				TagService.OnInstanceAdded(tag, instance, tagHandler);
-			}),
-		);
+		trove.connect(CollectionService.GetInstanceAddedSignal(tag), (instance) => {
+			TagService.OnInstanceAdded(tag, instance, tagHandler);
+		});
 
 		CollectionService.GetTagged(tag).forEach((instance) => {
 			TagService.OnInstanceAdded(tag, instance, tagHandler);

@@ -8,6 +8,7 @@ const InputService: InputServiceType = {
 	Actions: {},
 	BindAction: (name) => {
 		InputService.Actions[name] = new Signal();
+		print(InputService.Actions[name]);
 		return InputService.Actions[name];
 	},
 	UnbindAction: (name) => {

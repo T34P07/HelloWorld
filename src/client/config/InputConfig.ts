@@ -10,6 +10,7 @@ const InputConfig: InputConfigType = {
 	Jump: Enum.KeyCode.Space,
 	Dash: Enum.KeyCode.Q,
 	Attack: Enum.UserInputType.MouseButton1,
+	Block: Enum.UserInputType.MouseButton2,
 };
 
 export default InputConfig;

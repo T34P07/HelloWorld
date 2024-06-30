@@ -26,24 +26,23 @@ export class DashTag extends Tag {
         this.timer.start();
 
         const clone = this.instance.Clone();
-       // this.trove.add(clone);
+        // this.trove.add(clone);
         RemoveAllTags(clone);
 
         clone.GetDescendants().forEach((instance: Instance) => {
-            if (instance.IsA("BasePart") || instance.IsA("Decal"))
-            {
+            if (instance.IsA("BasePart") || instance.IsA("Decal")) {
                 TweenService.Create(instance, tweenInfo, { Transparency: 1 }).Play();
             }
 
-         //   if (instance.IsA("SpecialMesh"))
-           //     instance.TextureId = "";
+            //   if (instance.IsA("SpecialMesh"))
+            //     instance.TextureId = "";
 
             if (!instance.IsA("BasePart")) return;
 
             RemoveAllTags(instance);
             instance.CollisionGroup = "None";
             instance.Anchored = true;
-           // instance.Color = new Color3(.75, .75, .75);
+            // instance.Color = new Color3(.75, .75, .75);
         });
 
         clone.Parent = Workspace;

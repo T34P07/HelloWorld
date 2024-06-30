@@ -2,17 +2,14 @@ import AttachToRig from "shared/utilities/AttachToRig";
 import { Tag } from "./Tag";
 
 export class ToolTag extends Tag {
-	protected tool: Tool;
-	protected class: string;
 	private rig;
 
-	constructor(tool: Tool, toolclass: string) {
-		super();
-		this.tool = tool;
-		this.class = toolclass;
-		this.rig = this.tool.Parent as Model;
-		AttachToRig(this.tool, this.rig, "Character");
+	constructor(instance: Instance, tagClass: string) {
+		super(instance, tagClass);
+
+		this.rig = this.instance.Parent as Model;
+		AttachToRig(this.instance, this.rig, "Character");
 	}
 
-	Destroy() {}
+	Destroy() { }
 }

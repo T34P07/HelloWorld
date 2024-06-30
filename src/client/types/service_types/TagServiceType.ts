@@ -28,6 +28,7 @@ export type TagServiceType = {
 	tagHandlers: {
 		[tag: string]: TagHandlerType | undefined;
 	};
+	GetTagInstance: (tag: string, instance: Instance) => unknown;
 	OnInstanceAdded: (tag: string, instance: Instance, tagHandler: TagHandlerType) => void;
 	OnInstanceRemoved: (tag: string, instance: Instance, tagHandler: TagHandlerType) => void;
 	OnTagAdded: (tag: string) => void;

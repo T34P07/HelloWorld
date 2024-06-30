@@ -4,14 +4,14 @@ import CharacterService from "client/services/CharacterService";
 import CameraService from "client/services/CameraService";
 import { ActionAnimator } from "client/services/ActionAnimator";
 import { Trove } from "@rbxts/trove";
-import { ContentProvider, Workspace } from "@rbxts/services";
 import AttachToRig from "shared/utilities/AttachToRig";
 
 export class ToolTag extends Tag {
 	public trove = new Trove();
-	public actionTrove = new Trove();
+	public actionTrove = this.trove.extend();
 	public actionAnimator = undefined as ActionAnimator | undefined;
 	public equipped: boolean = false;
+	protected viewmodelTool: Tool | undefined;
 
 	protected Equipped(): boolean {
 		if (this.equipped) return false;
@@ -19,9 +19,9 @@ export class ToolTag extends Tag {
 			return false;
 		}
 
-		const viewmodelTool = Prefabs.Tools.FindFirstChild(this.instance.Name)!.Clone();
-		this.actionTrove.add(viewmodelTool);
-		viewmodelTool.Parent = CameraService.viewmodel;
+		this.viewmodelTool = Prefabs.Tools.FindFirstChild(this.instance.Name)!.Clone() as Tool;
+		this.actionTrove.add(this.viewmodelTool);
+		this.viewmodelTool.Parent = CameraService.viewmodel;
 
 		this.LoadAnimations();
 		return true;
@@ -41,7 +41,7 @@ export class ToolTag extends Tag {
 
 		if (baseAnimations && CharacterService.characterAnimator)
 			CharacterService.characterAnimator.LoadAnimations(baseAnimations);
-		
+
 		if (actionAnimations && CharacterService.animator) {
 			this.actionAnimator = new ActionAnimator(CharacterService.char as Model, CameraService.viewmodel);
 			this.actionAnimator.LoadAnimations(actionAnimations);
@@ -71,16 +71,16 @@ export class ToolTag extends Tag {
 			return;
 		}
 
-		this.trove.add(
-			(instance as Tool).Equipped.Connect(() => {
+		this.trove.connect(
+			(instance as Tool).Equipped, () => {
 				this.Equipped();
-			}),
+			},
 		);
 
-		this.trove.add(
-			(instance as Tool).Unequipped.Connect(() => {
+		this.trove.connect(
+			(instance as Tool).Unequipped, () => {
 				this.Unequipped();
-			}),
+			},
 		);
 	}
 

@@ -10,12 +10,17 @@ type Rigs = {
 
 type RigName = "viewmodel" | "character";
 
+export type GroupAnimationsTracks = {
+	viewmodel: AnimationTrack;
+	character: AnimationTrack;
+}
+
 export class ActionAnimator {
 	private rigs: Rigs = {
 		character: undefined,
 		viewmodel: undefined,
 	};
-	
+
 	private fadeTime = 0.1;
 
 	private animationTracks: AnimationTracks = {
@@ -87,20 +92,23 @@ export class ActionAnimator {
 		}
 	}
 
-	public GetAnimationTrack(name: string) {
-		
+	public GetGroupAnimationTracks(name: string) {
+		const groupAnimationsTracks = {} as GroupAnimationsTracks;
 
-		for (const [groupName, groupAnimationsTracks] of pairs(this.animationTracks)) {
-			const animationTracks = groupAnimationsTracks.get(name);
+		for (const [groupName, _groupAnimationsTracks] of pairs(this.animationTracks)) {
+			const animationTracks = _groupAnimationsTracks.get(name);
 			if (!animationTracks) continue;
 
 			const animationTrack = this.ChooseAnimationTrack(animationTracks) as AnimationTrack;
 			if (!animationTrack) continue;
-			
+
+			groupAnimationsTracks[groupName] = animationTrack;
 		}
+
+		return groupAnimationsTracks;
 	}
 
-	public PlayAnimation(name: string, fadeTime: number = this.fadeTime) {
+	public PlayAnimation(name: string, fadeTime: number = this.fadeTime, speed: number = 1) {
 		for (const [groupName, groupAnimationsTracks] of pairs(this.animationTracks)) {
 			const animationTracks = groupAnimationsTracks.get(name);
 			if (!animationTracks) continue;
@@ -109,6 +117,7 @@ export class ActionAnimator {
 			if (!animationTrack) continue;
 
 			animationTrack.Play(fadeTime);
+			animationTrack.AdjustSpeed(speed);
 		}
 	}
 

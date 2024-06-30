@@ -1,5 +1,7 @@
+import WeaponController from "./controllers/abilities/WeaponController";
 import DashController from "./controllers/abilities/DashController";
 import TagService from "./services/TagService";
 
-TagService.Start();
+WeaponController.Start();
 DashController.Start();
+TagService.Start();

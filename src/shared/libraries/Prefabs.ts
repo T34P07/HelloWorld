@@ -3,7 +3,7 @@ const ReplicatedStorage = game.GetService(`ReplicatedStorage`);
 interface Prefabs extends Folder {
 	Animations: Folder & {
 		Movement: Folder & {
-			Abilities: Folder;
+			Action: Folder;
 			Base: Folder;
 		};
 		Tools: Folder & {

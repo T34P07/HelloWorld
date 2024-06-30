@@ -1,9 +1,8 @@
 import Net from "@rbxts/net";
 
 const Remotes = Net.Definitions.Create({
-   PrintMessage: Net.Definitions.ClientToServerEvent<[message: string]>(),
-   MakeHello: Net.Definitions.ServerAsyncFunction<(message: string) => string>(),
    CharacterAbilityDash: Net.Definitions.ClientToServerEvent<[]>(),
+   WeaponsDamageDeal: Net.Definitions.ClientToServerEvent<[humanoidsHit: Humanoid[]]>(),
 });
 
 export default Remotes;

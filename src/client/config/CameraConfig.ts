@@ -10,28 +10,7 @@ const CameraConfig: CameraConfigType = {
 					Offset: new Vector3(0, 0, -1),
 				},
 			],
-		},
-		{
-			Responsiveness: -1,
-			OffsetResponsiveness: 10,
-			SubModes: [
-				{
-					Offset: new Vector3(2, 1, -6),
-				},
-				{
-					Offset: new Vector3(-2, 1, -6),
-				},
-			],
-		},
-		{
-			Responsiveness: -1,
-			OffsetResponsiveness: 10,
-			SubModes: [
-				{
-					Offset: new Vector3(0, 0, -8),
-				},
-			],
-		},
+		}
 	],
 	FOV: 80,
 	Clamp: math.rad(80),

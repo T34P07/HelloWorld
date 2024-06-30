@@ -8,12 +8,9 @@ const camera = Workspace.CurrentCamera!;
 
 export class Dash extends Ability {
     private linearVelocity: LinearVelocity;
-    private characterService: CharacterServiceType;
 
     constructor(characterService: CharacterServiceType) {
-        super();
-
-        this.characterService = characterService;
+        super(characterService);
 
         this.linearVelocity = new Instance("LinearVelocity");
         this.linearVelocity.Enabled = false;
@@ -31,6 +28,7 @@ export class Dash extends Ability {
         const camCF = camera.CFrame;
         this.linearVelocity.VectorVelocity = camCF.LookVector.mul(DashConfig.VelocityFactor);
         this.linearVelocity.Enabled = true;
+        this.actionAnimator.PlayAnimation("Dash", .1);
         Events.Character.Ability.Dash.SendToServer();
 
         task.delay(DashConfig.Duration, () => {
